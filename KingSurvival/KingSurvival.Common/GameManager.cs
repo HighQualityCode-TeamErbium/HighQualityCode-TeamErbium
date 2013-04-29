@@ -50,19 +50,19 @@ namespace KingSurvival.Common
                     KDR = false;
                 }
 
-                if (proverka(K.Row - 1, K.Column - 1, A, B, C, D))
+                if (IsAvailableNextPosition(K.Row - 1, K.Column - 1, A, B, C, D))
                 {
                     KUL = false;
                 }
-                if (proverka(K.Row - 1, K.Column + 1, A, B, C, D))
+                if (IsAvailableNextPosition(K.Row - 1, K.Column + 1, A, B, C, D))
                 {
                     KUR = false; // castration... nasty
                 }
-                if (proverka(K.Row + 1, K.Column - 1, A, B, C, D))
+                if (IsAvailableNextPosition(K.Row + 1, K.Column - 1, A, B, C, D))
                 {
                     KDL = false;
                 }
-                if (proverka(K.Row + 1, K.Column + 1, A, B, C, D))
+                if (IsAvailableNextPosition(K.Row + 1, K.Column + 1, A, B, C, D))
                 {
                     KDR = false;
                 }
@@ -95,8 +95,8 @@ namespace KingSurvival.Common
             }
             else if (pawn.Column > 0 && pawn.Column < 7)
             {
-                if (proverka(pawn.Row + 1, pawn.Column + 1, obstacle1, obstacle2, obstacle3, obstacle4) &&
-                    proverka(
+                if (IsAvailableNextPosition(pawn.Row + 1, pawn.Column + 1, obstacle1, obstacle2, obstacle3, obstacle4) &&
+                    IsAvailableNextPosition(
                     pawn.Row + 1,
                     pawn.Column - 1,
                     obstacle1,
@@ -106,14 +106,14 @@ namespace KingSurvival.Common
             }
             else if (pawn.Column == 0)
             {
-                if (proverka(pawn.Row + 1, pawn.Column + 1, obstacle1, obstacle2, obstacle3, obstacle4))
+                if (IsAvailableNextPosition(pawn.Row + 1, pawn.Column + 1, obstacle1, obstacle2, obstacle3, obstacle4))
                 {
                     return false;
                 }
             }
             else if (pawn.Column == 4 + 3)
             {
-                if (proverka(pawn.Row + 1, pawn.Column - 1, obstacle1, obstacle2, obstacle3, obstacle4))
+                if (IsAvailableNextPosition(pawn.Row + 1, pawn.Column - 1, obstacle1, obstacle2, obstacle3, obstacle4))
                 {
                     return false;
                 }
@@ -130,7 +130,7 @@ namespace KingSurvival.Common
                 switch (move)
                 {
                     case "KUL":
-                        if (K.Column > 0 && K.Row > 0 && !proverka(K.Row - 1, K.Column - 1, A, B, C, D))
+                        if (K.Column > 0 && K.Row > 0 && !IsAvailableNextPosition(K.Row - 1, K.Column - 1, A, B, C, D))
                         {
                             K.Column--;
                             K.Row--;
@@ -143,7 +143,7 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "KUR": // if KUR... gotta love these moments
-                        if (K.Column < 7 && K.Row > 0 && !proverka(K.Row - 1, K.Column + 1, A, B, C, D))
+                        if (K.Column < 7 && K.Row > 0 && !IsAvailableNextPosition(K.Row - 1, K.Column + 1, A, B, C, D))
                         {
                             K.Column++;
                             K.Row--;
@@ -156,7 +156,7 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "KDL":
-                        if (K.Column > 0 && K.Row < 7 && !proverka(K.Row + 1, K.Column - 1, A, B, C, D))
+                        if (K.Column > 0 && K.Row < 7 && !IsAvailableNextPosition(K.Row + 1, K.Column - 1, A, B, C, D))
                         {
                             K.Column--;
                             K.Row++;
@@ -169,7 +169,7 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "KDR":
-                        if (K.Column < 7 && K.Row < 7 && !proverka(K.Row + 1, K.Column + 1, A, B, C, D))
+                        if (K.Column < 7 && K.Row < 7 && !IsAvailableNextPosition(K.Row + 1, K.Column + 1, A, B, C, D))
                         {
                             K.Column++;
                             K.Row++;
@@ -194,7 +194,7 @@ namespace KingSurvival.Common
                 switch (move)
                 {
                     case "ADL":
-                        if (A.Column > 0 && A.Row < 7 && !proverka(A.Row + 1, A.Column - 1, K, B, C, D))
+                        if (A.Column > 0 && A.Row < 7 && !IsAvailableNextPosition(A.Row + 1, A.Column - 1, K, B, C, D))
                         {
                             A.Column--;
                             A.Row++;
@@ -207,7 +207,7 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "ADR":
-                        if (A.Column < 7 && A.Row < 7 && !proverka(A.Row + 1, A.Column + 1, K, B, C, D))
+                        if (A.Column < 7 && A.Row < 7 && !IsAvailableNextPosition(A.Row + 1, A.Column + 1, K, B, C, D))
                         {
                             A.Column++;
                             A.Row++;
@@ -221,7 +221,7 @@ namespace KingSurvival.Common
                         break;
                     case "BDL":
                         if (B.Column > 0 && B.Row < 7 &&
-                            !proverka(B.Row + 1, B.Column - 1, A, K, C, D))
+                            !IsAvailableNextPosition(B.Row + 1, B.Column - 1, A, K, C, D))
                         {
                             B.Column--;
                             B.Row++;
@@ -234,7 +234,7 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "BDR":
-                        if (B.Column < 7 && B.Row < 7 && !proverka(B.Row + 1, B.Column + 1, A, K, C, D))
+                        if (B.Column < 7 && B.Row < 7 && !IsAvailableNextPosition(B.Row + 1, B.Column + 1, A, K, C, D))
                         {
                             B.Column++;
                             B.Row++;
@@ -247,7 +247,7 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "CDL":
-                        if (C.Column > 0 && C.Row < 7 && !proverka(C.Row + 1, C.Column + 1, A, B, K, D))
+                        if (C.Column > 0 && C.Row < 7 && !IsAvailableNextPosition(C.Row + 1, C.Column + 1, A, B, K, D))
                         {
                             C.Column--;
                             C.Row++;
@@ -260,7 +260,7 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "CDR":
-                        if (C.Column < 7 && C.Row < 7 && !proverka(C.Row + 1, C.Column + 1, A, B, K, D))
+                        if (C.Column < 7 && C.Row < 7 && !IsAvailableNextPosition(C.Row + 1, C.Column + 1, A, B, K, D))
                         {
                             C.Column++;
                             C.Row++;
@@ -273,7 +273,7 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "DDL":
-                        if (D.Column > 0 && D.Row < 7 && !proverka(D.Row + 1, D.Column - 1, A, B, C, K))
+                        if (D.Column > 0 && D.Row < 7 && !IsAvailableNextPosition(D.Row + 1, D.Column - 1, A, B, C, K))
                         {
                             D.Column--;
                             D.Row++;
@@ -286,7 +286,7 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "DDR":
-                        if (D.Column < 7 && D.Row < 7 && !proverka(D.Row + 1, D.Column + 1, A, B, C, K))
+                        if (D.Column < 7 && D.Row < 7 && !IsAvailableNextPosition(D.Row + 1, D.Column + 1, A, B, C, K))
                         {
                             D.Column++;
                             D.Row++;
@@ -308,14 +308,28 @@ namespace KingSurvival.Common
             return true;
         }
 
-        private static bool proverka(int notOverlapedRow, int notOverlapedColumn, PawnCoordinates overlap1, PawnCoordinates overlap2, PawnCoordinates overlap3, PawnCoordinates overlap4)
+        private static bool IsAvailableNextPosition(int notOverlapedRow, int notOverlapedColumn, PawnCoordinates overlap1, PawnCoordinates overlap2, PawnCoordinates overlap3, PawnCoordinates overlap4)
         {
-            if (notOverlapedRow == overlap1.Row && notOverlapedColumn == overlap1.Column) return true;
-            else if (notOverlapedRow == overlap2.Row && notOverlapedColumn == overlap2.Column) return true;
-            else if (notOverlapedRow == overlap3.Row && notOverlapedColumn == overlap3.Column) return true;
-            else if (notOverlapedRow == overlap4.Row && notOverlapedColumn == overlap4.Column) return true;
-            else
+            if (notOverlapedRow == overlap1.Row && notOverlapedColumn == overlap1.Column)
+            {
                 return false;
+            }
+            else if (notOverlapedRow == overlap2.Row && notOverlapedColumn == overlap2.Column)
+            {
+                return false;
+            }
+            else if (notOverlapedRow == overlap3.Row && notOverlapedColumn == overlap3.Column)
+            {
+                return false;
+            }
+            else if (notOverlapedRow == overlap4.Row && notOverlapedColumn == overlap4.Column)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }
