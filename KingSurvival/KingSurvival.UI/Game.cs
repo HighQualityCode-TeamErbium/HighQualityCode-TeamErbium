@@ -1,4 +1,4 @@
-﻿namespace KingSurvival.UI
+namespace KingSurvival.UI
 {
     using System;
     using KingSurvival.Common;
@@ -15,8 +15,8 @@
             PawnCoordinates pawnD = new PawnCoordinates(0, 6);
             PawnCoordinates kingPawn = new PawnCoordinates(7, 3);
 
-            bool kraj = false;
-            int kojE_naHod = 1;
+            bool end = false;
+            int onMove = 1;
             do
             {
                 bool ok;
