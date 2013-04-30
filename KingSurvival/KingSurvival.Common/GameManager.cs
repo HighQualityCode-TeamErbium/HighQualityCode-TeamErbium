@@ -6,9 +6,11 @@ namespace KingSurvival.Common
     {
         private static bool isKingOnTurn;
         private static bool isKingWinner;
+        
         private static bool hasGameEnded(int turn, PawnCoordinates pawnA, PawnCoordinates pawnB, PawnCoordinates pawnC, PawnCoordinates pawnD, PawnCoordinates kingPawn)
         {
             // TODO : Refactor this code (yoan)
+            #region /*Change turn input*/
             if (turn % 2 == 1)
             {
                 isKingOnTurn = true;
@@ -17,95 +19,105 @@ namespace KingSurvival.Common
             {
                 isKingOnTurn = false;
             }
+            #endregion
 
             if (isKingOnTurn)
             {
                 if (kingPawn.Row == 0)
                 {
-                    // King win in this situation
-                    // TODO : Change this method to minimize capling with console
-                    Console.Clear();
-                    PE4AT_DASKA(pawnA, pawnB, pawnC, pawnD, kingPawn);
-                    Console.WriteLine("King loses.");
-                    isKingWinner == true;
+                    isKingWinner = true;
+                    
+                   DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, kingPawn);
 
+                    // game ends
                     return true;
                 }
                 else
                 {
+                    //game continues
                     return false;
                 }
             }
             else
             {
                 // Kings movements
-                bool KUL = true;
-                bool KUR = true;
-                bool KDL = true;
-                bool KDR = true;
-
+                bool canKingGoUpLeft = true;
+                bool canKingGoUpRight = true;
+                bool canKingGoDownLeft = true;
+                bool canKingGoDownRight = true;
+                // checks is king over some border
                 if (kingPawn.Row == 0)
                 {
-                    KUL = false;
-                    KUR = false;
+                    canKingGoUpLeft = false;
+                    canKingGoUpRight = false;
                 }
                 else if (kingPawn.Row == 7)
                 {
-                    KDL = false;
-                    KDR = false;
+                    canKingGoDownLeft = false;
+                    canKingGoDownRight = false;
                 }
 
                 if (kingPawn.Column == 0)
                 {
-                    KUL = false;
-                    KDL = false;
+                    canKingGoUpLeft = false;
+                    canKingGoDownLeft = false;
                 }
                 else if (kingPawn.Column == 7)
                 {
-                    KUR = false;
-                    KDR = false;
+                    canKingGoUpRight = false;
+                    canKingGoDownRight = false;
                 }
 
-                if (IsAvailableNextPosition(kingPawn.Row - 1, kingPawn.Column - 1, pawnA, pawnB, pawnC, pawnD))
-                {
-                    KUL = false;
-                }
-                if (IsAvailableNextPosition(kingPawn.Row - 1, kingPawn.Column + 1, pawnA, pawnB, pawnC, pawnD))
-                {
-                    KUR = false;
-                }
-                if (IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column - 1, pawnA, pawnB, pawnC, pawnD))
-                {
-                    KDL = false;
-                }
-                if (IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column + 1, pawnA, pawnB, pawnC, pawnD))
-                {
-                    KDR = false;
-                }
+                // check if king is near pawn
+                canKingGoUpLeft = !(IsAvailableNextPosition(kingPawn.Row - 1, kingPawn.Column - 1, pawnA, pawnB, pawnC, pawnD));
+                canKingGoUpRight = !(IsAvailableNextPosition(kingPawn.Row - 1, kingPawn.Column + 1, pawnA, pawnB, pawnC, pawnD));
+                canKingGoDownLeft = !(IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column - 1, pawnA, pawnB, pawnC, pawnD));
+                canKingGoDownRight = !(IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column + 1, pawnA, pawnB, pawnC, pawnD));
+            
 
-                if (!KDR && !KDL && !KUL && !KUR)
+                bool isAnyOfKingMovesAvaiable = canKingGoDownRight || canKingGoDownLeft || canKingGoUpLeft || canKingGoUpRight;
+
+                if (!isAnyOfKingMovesAvaiable)
                 {
-                    Console.Clear();
-                    PE4AT_DASKA(pawnA, pawnB, pawnC, pawnD, kingPawn);
-                    Console.WriteLine("King loses.");
+                    isKingWinner = false;
+
+                    DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, kingPawn);
+              
+                    // game ends;
                     return true;
                 }
 
-                if (!proverka1(pawnA, pawnB, pawnC, pawnD, kingPawn) && !proverka1(pawnB, pawnA, pawnC, pawnD, kingPawn) && !proverka1(pawnC, pawnA, pawnB, pawnD, kingPawn) && !proverka1(pawnD, pawnA, pawnB, pawnC, kingPawn))
+                if (!proverka1(pawnA, pawnB, pawnC, pawnD, kingPawn) &&
+                    !proverka1(pawnB, pawnA, pawnC, pawnD, kingPawn) &&
+                    !proverka1(pawnC, pawnA, pawnB, pawnD, kingPawn) &&
+                    !proverka1(pawnD, pawnA, pawnB, pawnC, kingPawn))
                 {
-                    Console.Clear();
-                    PE4AT_DASKA(pawnA, pawnB, pawnC, pawnD, kingPawn);
-                    Console.WriteLine("King wins in {0} turns.", turn / 2);
+                    
+                    isKingWinner = true;
+                
+                    DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, kingPawn);
+                    // game ends;
                     return true;
                 }
-
+                // game continues
                 return false;
             }
         }
 
-        private static void DisplayCurrentEndOnConsole()
+        private static void DisplayCurrentEndOnConsole(int turn, PawnCoordinates pawnA, PawnCoordinates pawnB, PawnCoordinates pawnC, PawnCoordinates pawnD, PawnCoordinates kingPawn)
         {
-           
+            if (isKingWinner)
+            {
+                Console.Clear();
+                PE4AT_DASKA(pawnA, pawnB, pawnC, pawnD, kingPawn);
+                Console.WriteLine("King wins in {0} turns.", turn / 2);
+            }
+            else
+            {
+                Console.Clear();
+                PE4AT_DASKA(pawnA, pawnB, pawnC, pawnD, kingPawn);
+                Console.WriteLine("King loses.");
+            }
         }
 
         private static bool proverka1(PawnCoordinates kingPawn, PawnCoordinates pawnA, PawnCoordinates pawnB, PawnCoordinates pawnC, PawnCoordinates pawnD)
@@ -326,7 +338,7 @@ namespace KingSurvival.Common
             return true;
         }
 
-        private static bool IsAvailableNextPosition(int notOverlapedRow, int notOverlapedColumn, PawnCoordinates overlap1, PawnCoordinates overlap2, PawnCoordinates overlap3, PawnCoordinates overlap4)
+        private static bool     IsAvailableNextPosition(int notOverlapedRow, int notOverlapedColumn, PawnCoordinates overlap1, PawnCoordinates overlap2, PawnCoordinates overlap3, PawnCoordinates overlap4)
         {
             if (notOverlapedRow == overlap1.Row && notOverlapedColumn == overlap1.Column)
             {
