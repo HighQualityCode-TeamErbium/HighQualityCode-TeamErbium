@@ -4,15 +4,31 @@ namespace KingSurvival.Common
 {
     public static class GameManager
     {
-        private static bool proverka2(int turn, PawnCoordinates A, PawnCoordinates B, PawnCoordinates C, PawnCoordinates D, PawnCoordinates K)
+        private static bool isKingOnTurn;
+        private static bool isKingWinner;
+        private static bool hasGameEnded(int turn, PawnCoordinates pawnA, PawnCoordinates pawnB, PawnCoordinates pawnC, PawnCoordinates pawnD, PawnCoordinates kingPawn)
         {
+            // TODO : Refactor this code (yoan)
             if (turn % 2 == 1)
             {
-                if (K.Row == 0)
+                isKingOnTurn = true;
+            }
+            else
+            {
+                isKingOnTurn = false;
+            }
+
+            if (isKingOnTurn)
+            {
+                if (kingPawn.Row == 0)
                 {
+                    // King win in this situation
+                    // TODO : Change this method to minimize capling with console
                     Console.Clear();
-                    PE4AT_DASKA(A, B, C, D, K);
-                    Console.WriteLine("King wins in {0} turns!", turn / 2 + 1);
+                    PE4AT_DASKA(pawnA, pawnB, pawnC, pawnD, kingPawn);
+                    Console.WriteLine("King loses.");
+                    isKingWinner == true;
+
                     return true;
                 }
                 else
@@ -22,47 +38,47 @@ namespace KingSurvival.Common
             }
             else
             {
+                // Kings movements
                 bool KUL = true;
-                bool KUR = true; // yup, it's a boy
+                bool KUR = true;
                 bool KDL = true;
                 bool KDR = true;
 
-                if (K.Row == 0)
+                if (kingPawn.Row == 0)
                 {
-                    // tuka carya e na hod
                     KUL = false;
                     KUR = false;
                 }
-                else if (K.Row == 7)
+                else if (kingPawn.Row == 7)
                 {
                     KDL = false;
                     KDR = false;
                 }
 
-                if (K.Column == 0)
+                if (kingPawn.Column == 0)
                 {
                     KUL = false;
                     KDL = false;
                 }
-                else if (K.Column == 7)
+                else if (kingPawn.Column == 7)
                 {
-                    KUR = false; // kur v gyzaaaaa, oh boli!
+                    KUR = false;
                     KDR = false;
                 }
 
-                if (IsAvailableNextPosition(K.Row - 1, K.Column - 1, A, B, C, D))
+                if (IsAvailableNextPosition(kingPawn.Row - 1, kingPawn.Column - 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     KUL = false;
                 }
-                if (IsAvailableNextPosition(K.Row - 1, K.Column + 1, A, B, C, D))
+                if (IsAvailableNextPosition(kingPawn.Row - 1, kingPawn.Column + 1, pawnA, pawnB, pawnC, pawnD))
                 {
-                    KUR = false; // castration... nasty
+                    KUR = false;
                 }
-                if (IsAvailableNextPosition(K.Row + 1, K.Column - 1, A, B, C, D))
+                if (IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column - 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     KDL = false;
                 }
-                if (IsAvailableNextPosition(K.Row + 1, K.Column + 1, A, B, C, D))
+                if (IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column + 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     KDR = false;
                 }
@@ -70,15 +86,15 @@ namespace KingSurvival.Common
                 if (!KDR && !KDL && !KUL && !KUR)
                 {
                     Console.Clear();
-                    PE4AT_DASKA(A, B, C, D, K);
+                    PE4AT_DASKA(pawnA, pawnB, pawnC, pawnD, kingPawn);
                     Console.WriteLine("King loses.");
                     return true;
                 }
 
-                if (!proverka1(A, B, C, D, K) && !proverka1(B, A, C, D, K) && !proverka1(C, A, B, D, K) && !proverka1(D, A, B, C, K))
+                if (!proverka1(pawnA, pawnB, pawnC, pawnD, kingPawn) && !proverka1(pawnB, pawnA, pawnC, pawnD, kingPawn) && !proverka1(pawnC, pawnA, pawnB, pawnD, kingPawn) && !proverka1(pawnD, pawnA, pawnB, pawnC, kingPawn))
                 {
                     Console.Clear();
-                    PE4AT_DASKA(A, B, C, D, K);
+                    PE4AT_DASKA(pawnA, pawnB, pawnC, pawnD, kingPawn);
                     Console.WriteLine("King wins in {0} turns.", turn / 2);
                     return true;
                 }
@@ -87,33 +103,35 @@ namespace KingSurvival.Common
             }
         }
 
-        private static bool proverka1(PawnCoordinates pawn, PawnCoordinates obstacle1, PawnCoordinates obstacle2, PawnCoordinates obstacle3, PawnCoordinates obstacle4)
+        private static void DisplayCurrentEndOnConsole()
         {
-            if (pawn.Row == 7)
+           
+        }
+
+        private static bool proverka1(PawnCoordinates kingPawn, PawnCoordinates pawnA, PawnCoordinates pawnB, PawnCoordinates pawnC, PawnCoordinates pawnD)
+        {
+            if (kingPawn.Row == 7)
             {
                 return false;
             }
-            else if (pawn.Column > 0 && pawn.Column < 7)
+            else if (kingPawn.Column > 0 && kingPawn.Column < 7)
             {
-                if (IsAvailableNextPosition(pawn.Row + 1, pawn.Column + 1, obstacle1, obstacle2, obstacle3, obstacle4) &&
-                    IsAvailableNextPosition(
-                    pawn.Row + 1,
-                    pawn.Column - 1,
-                    obstacle1,
-                    obstacle2,
-                    obstacle3,
-                    obstacle4)) return false;
-            }
-            else if (pawn.Column == 0)
-            {
-                if (IsAvailableNextPosition(pawn.Row + 1, pawn.Column + 1, obstacle1, obstacle2, obstacle3, obstacle4))
+                if (IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column + 1, pawnA, pawnB, pawnC, pawnD) &&
+                    IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column - 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     return false;
                 }
             }
-            else if (pawn.Column == 4 + 3)
+            else if (kingPawn.Column == 0)
             {
-                if (IsAvailableNextPosition(pawn.Row + 1, pawn.Column - 1, obstacle1, obstacle2, obstacle3, obstacle4))
+                if (IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column + 1, pawnA, pawnB, pawnC, pawnD))
+                {
+                    return false;
+                }
+            }
+            else if (kingPawn.Column == 4 + 3)
+            {
+                if (IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column - 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     return false;
                 }
