@@ -2,12 +2,12 @@
 {
     using System;
 
-    public struct PawnCoordinates
+    internal struct MatrixCoordinates
     {
         private int row;
         private int column;
 
-        public PawnCoordinates(int row, int column)
+        public MatrixCoordinates(int row, int column)
             : this()
         {
             this.Row = row;

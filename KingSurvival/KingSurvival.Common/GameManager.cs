@@ -2,12 +2,12 @@
 
 namespace KingSurvival.Common
 {
-    public static class GameManager
+    internal static class GameManager
     {
         private static bool isKingOnTurn;
         private static bool isKingWinner;
         
-        private static bool hasGameEnded(int turn, PawnCoordinates pawnA, PawnCoordinates pawnB, PawnCoordinates pawnC, PawnCoordinates pawnD, PawnCoordinates kingPawn)
+        private static bool HasGameEnded(int turn, MatrixCoordinates pawnA, MatrixCoordinates pawnB, MatrixCoordinates pawnC, MatrixCoordinates pawnD, MatrixCoordinates kingPawn)
         {
             // TODO : Refactor this code (yoan)
             #region /*Change turn input*/
@@ -104,7 +104,7 @@ namespace KingSurvival.Common
             }
         }
 
-        private static void DisplayCurrentEndOnConsole(int turn, PawnCoordinates pawnA, PawnCoordinates pawnB, PawnCoordinates pawnC, PawnCoordinates pawnD, PawnCoordinates kingPawn)
+        private static void DisplayCurrentEndOnConsole(int turn, MatrixCoordinates pawnA, MatrixCoordinates pawnB, MatrixCoordinates pawnC, MatrixCoordinates pawnD, MatrixCoordinates kingPawn)
         {
             if (isKingWinner)
             {
@@ -120,7 +120,7 @@ namespace KingSurvival.Common
             }
         }
 
-        private static bool proverka1(PawnCoordinates kingPawn, PawnCoordinates pawnA, PawnCoordinates pawnB, PawnCoordinates pawnC, PawnCoordinates pawnD)
+        private static bool proverka1(MatrixCoordinates kingPawn, MatrixCoordinates pawnA, MatrixCoordinates pawnB, MatrixCoordinates pawnC, MatrixCoordinates pawnD)
         {
             if (kingPawn.Row == 7)
             {
@@ -151,7 +151,7 @@ namespace KingSurvival.Common
             return true;
         }
 
-        private static bool isMoveLeft(int turn, ref PawnCoordinates A, ref PawnCoordinates B, ref PawnCoordinates C, ref PawnCoordinates D, ref PawnCoordinates K)
+        private static bool isMoveLeft(int turn, ref MatrixCoordinates A, ref MatrixCoordinates B, ref MatrixCoordinates C, ref MatrixCoordinates D, ref MatrixCoordinates K)
         {
             if (turn % 2 == 1)
             {
@@ -338,7 +338,7 @@ namespace KingSurvival.Common
             return true;
         }
 
-        private static bool     IsAvailableNextPosition(int notOverlapedRow, int notOverlapedColumn, PawnCoordinates overlap1, PawnCoordinates overlap2, PawnCoordinates overlap3, PawnCoordinates overlap4)
+        private static bool IsAvailableNextPosition(int notOverlapedRow, int notOverlapedColumn, MatrixCoordinates overlap1, MatrixCoordinates overlap2, MatrixCoordinates overlap3, MatrixCoordinates overlap4)
         {
             if (notOverlapedRow == overlap1.Row && notOverlapedColumn == overlap1.Column)
             {
