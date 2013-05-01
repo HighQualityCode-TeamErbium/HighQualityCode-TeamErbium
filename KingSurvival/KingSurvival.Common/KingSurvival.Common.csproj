@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Board.cs" />
-    <Compile Include="Engine.cs" />
+    <Compile Include="ConsoleEngine.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="IEngine.cs" />
     <Compile Include="Pawn.cs" />

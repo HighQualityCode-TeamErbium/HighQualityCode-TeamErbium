@@ -1,10 +1,9 @@
-﻿using System;
-
-namespace KingSurvival.Common
+﻿namespace KingSurvival.Common
 {
+    using System;
+
     public interface IEngine
     {
-        void Initialize();
         void Run();
     }
 }

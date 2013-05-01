@@ -6,8 +6,8 @@ namespace KingSurvival.Common
     {
         private static bool isKingOnTurn;
         private static bool isKingWinner;
-        
-        private static bool HasGameEnded(int turn, MatrixCoordinates pawnA, MatrixCoordinates pawnB, MatrixCoordinates pawnC, MatrixCoordinates pawnD, MatrixCoordinates kingPawn)
+
+        public static bool HasGameEnded(int turn, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn pawnKing)
         {
             // TODO : Refactor this code (yoan)
             #region /*Change turn input*/
@@ -23,11 +23,11 @@ namespace KingSurvival.Common
 
             if (isKingOnTurn)
             {
-                if (kingPawn.Row == 0)
+                if (pawnKing.XCoordinate == 0)
                 {
                     isKingWinner = true;
                     
-                   DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, kingPawn);
+                   //DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, pawnKing);
 
                     // game ends
                     return true;
@@ -46,33 +46,33 @@ namespace KingSurvival.Common
                 bool canKingGoDownLeft = true;
                 bool canKingGoDownRight = true;
                 // checks is king over some border
-                if (kingPawn.Row == 0)
+                if (pawnKing.XCoordinate == 0)
                 {
                     canKingGoUpLeft = false;
                     canKingGoUpRight = false;
                 }
-                else if (kingPawn.Row == 7)
+                else if (pawnKing.XCoordinate == 7)
                 {
                     canKingGoDownLeft = false;
                     canKingGoDownRight = false;
                 }
 
-                if (kingPawn.Column == 0)
+                if (pawnKing.YCoordinate == 0)
                 {
                     canKingGoUpLeft = false;
                     canKingGoDownLeft = false;
                 }
-                else if (kingPawn.Column == 7)
+                else if (pawnKing.YCoordinate == 7)
                 {
                     canKingGoUpRight = false;
                     canKingGoDownRight = false;
                 }
 
                 // check if king is near pawn
-                canKingGoUpLeft = !(IsAvailableNextPosition(kingPawn.Row - 1, kingPawn.Column - 1, pawnA, pawnB, pawnC, pawnD));
-                canKingGoUpRight = !(IsAvailableNextPosition(kingPawn.Row - 1, kingPawn.Column + 1, pawnA, pawnB, pawnC, pawnD));
-                canKingGoDownLeft = !(IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column - 1, pawnA, pawnB, pawnC, pawnD));
-                canKingGoDownRight = !(IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column + 1, pawnA, pawnB, pawnC, pawnD));
+                canKingGoUpLeft = !(IsAvailableNextPosition(pawnKing.XCoordinate - 1, pawnKing.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD));
+                canKingGoUpRight = !(IsAvailableNextPosition(pawnKing.XCoordinate - 1, pawnKing.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD));
+                canKingGoDownLeft = !(IsAvailableNextPosition(pawnKing.XCoordinate + 1, pawnKing.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD));
+                canKingGoDownRight = !(IsAvailableNextPosition(pawnKing.XCoordinate + 1, pawnKing.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD));
             
 
                 bool isAnyOfKingMovesAvaiable = canKingGoDownRight || canKingGoDownLeft || canKingGoUpLeft || canKingGoUpRight;
@@ -81,21 +81,21 @@ namespace KingSurvival.Common
                 {
                     isKingWinner = false;
 
-                    DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, kingPawn);
+                    //DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, pawnKing);
               
                     // game ends;
                     return true;
                 }
 
-                if (!proverka1(pawnA, pawnB, pawnC, pawnD, kingPawn) &&
-                    !proverka1(pawnB, pawnA, pawnC, pawnD, kingPawn) &&
-                    !proverka1(pawnC, pawnA, pawnB, pawnD, kingPawn) &&
-                    !proverka1(pawnD, pawnA, pawnB, pawnC, kingPawn))
+                if (!proverka1(pawnA, pawnB, pawnC, pawnD, pawnKing) &&
+                    !proverka1(pawnB, pawnA, pawnC, pawnD, pawnKing) &&
+                    !proverka1(pawnC, pawnA, pawnB, pawnD, pawnKing) &&
+                    !proverka1(pawnD, pawnA, pawnB, pawnC, pawnKing))
                 {
                     
                     isKingWinner = true;
                 
-                    DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, kingPawn);
+                    //DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, pawnKing);
                     // game ends;
                     return true;
                 }
@@ -104,46 +104,30 @@ namespace KingSurvival.Common
             }
         }
 
-        private static void DisplayCurrentEndOnConsole(int turn, MatrixCoordinates pawnA, MatrixCoordinates pawnB, MatrixCoordinates pawnC, MatrixCoordinates pawnD, MatrixCoordinates kingPawn)
+        private static bool proverka1(Pawn kingPawn, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
-            if (isKingWinner)
-            {
-                Console.Clear();
-                PE4AT_DASKA(pawnA, pawnB, pawnC, pawnD, kingPawn);
-                Console.WriteLine("King wins in {0} turns.", turn / 2);
-            }
-            else
-            {
-                Console.Clear();
-                PE4AT_DASKA(pawnA, pawnB, pawnC, pawnD, kingPawn);
-                Console.WriteLine("King loses.");
-            }
-        }
-
-        private static bool proverka1(MatrixCoordinates kingPawn, MatrixCoordinates pawnA, MatrixCoordinates pawnB, MatrixCoordinates pawnC, MatrixCoordinates pawnD)
-        {
-            if (kingPawn.Row == 7)
+            if (kingPawn.XCoordinate == 7)
             {
                 return false;
             }
-            else if (kingPawn.Column > 0 && kingPawn.Column < 7)
+            else if (kingPawn.YCoordinate > 0 && kingPawn.YCoordinate < 7)
             {
-                if (IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column + 1, pawnA, pawnB, pawnC, pawnD) &&
-                    IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column - 1, pawnA, pawnB, pawnC, pawnD))
+                if (IsAvailableNextPosition(kingPawn.XCoordinate + 1, kingPawn.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD) &&
+                    IsAvailableNextPosition(kingPawn.XCoordinate + 1, kingPawn.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     return false;
                 }
             }
-            else if (kingPawn.Column == 0)
+            else if (kingPawn.YCoordinate == 0)
             {
-                if (IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column + 1, pawnA, pawnB, pawnC, pawnD))
+                if (IsAvailableNextPosition(kingPawn.XCoordinate + 1, kingPawn.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     return false;
                 }
             }
-            else if (kingPawn.Column == 4 + 3)
+            else if (kingPawn.YCoordinate == 4 + 3)
             {
-                if (IsAvailableNextPosition(kingPawn.Row + 1, kingPawn.Column - 1, pawnA, pawnB, pawnC, pawnD))
+                if (IsAvailableNextPosition(kingPawn.XCoordinate + 1, kingPawn.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     return false;
                 }
@@ -151,7 +135,7 @@ namespace KingSurvival.Common
             return true;
         }
 
-        private static bool isMoveLeft(int turn, ref MatrixCoordinates A, ref MatrixCoordinates B, ref MatrixCoordinates C, ref MatrixCoordinates D, ref MatrixCoordinates K)
+        public static bool isMoveLeft(int turn, Pawn A, Pawn B, Pawn C, Pawn D, Pawn K)
         {
             if (turn % 2 == 1)
             {
@@ -160,10 +144,10 @@ namespace KingSurvival.Common
                 switch (move)
                 {
                     case "KUL":
-                        if (K.Column > 0 && K.Row > 0 && !IsAvailableNextPosition(K.Row - 1, K.Column - 1, A, B, C, D))
+                        if (K.YCoordinate > 0 && K.XCoordinate > 0 && !IsAvailableNextPosition(K.XCoordinate - 1, K.YCoordinate - 1, A, B, C, D))
                         {
-                            K.Column--;
-                            K.Row--;
+                            K.YCoordinate--;
+                            K.XCoordinate--;
                         }
                         else
                         {
@@ -173,10 +157,10 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "KUR": // if KUR... gotta love these moments
-                        if (K.Column < 7 && K.Row > 0 && !IsAvailableNextPosition(K.Row - 1, K.Column + 1, A, B, C, D))
+                        if (K.YCoordinate < 7 && K.XCoordinate > 0 && !IsAvailableNextPosition(K.XCoordinate - 1, K.YCoordinate + 1, A, B, C, D))
                         {
-                            K.Column++;
-                            K.Row--;
+                            K.YCoordinate++;
+                            K.XCoordinate--;
                         }
                         else
                         {
@@ -186,10 +170,10 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "KDL":
-                        if (K.Column > 0 && K.Row < 7 && !IsAvailableNextPosition(K.Row + 1, K.Column - 1, A, B, C, D))
+                        if (K.YCoordinate > 0 && K.XCoordinate < 7 && !IsAvailableNextPosition(K.XCoordinate + 1, K.YCoordinate - 1, A, B, C, D))
                         {
-                            K.Column--;
-                            K.Row++;
+                            K.YCoordinate--;
+                            K.XCoordinate++;
                         }
                         else
                         {
@@ -199,10 +183,10 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "KDR":
-                        if (K.Column < 7 && K.Row < 7 && !IsAvailableNextPosition(K.Row + 1, K.Column + 1, A, B, C, D))
+                        if (K.YCoordinate < 7 && K.XCoordinate < 7 && !IsAvailableNextPosition(K.XCoordinate + 1, K.YCoordinate + 1, A, B, C, D))
                         {
-                            K.Column++;
-                            K.Row++;
+                            K.YCoordinate++;
+                            K.XCoordinate++;
                         }
                         else
                         {
@@ -224,10 +208,10 @@ namespace KingSurvival.Common
                 switch (move)
                 {
                     case "ADL":
-                        if (A.Column > 0 && A.Row < 7 && !IsAvailableNextPosition(A.Row + 1, A.Column - 1, K, B, C, D))
+                        if (A.YCoordinate > 0 && A.XCoordinate < 7 && !IsAvailableNextPosition(A.XCoordinate + 1, A.YCoordinate - 1, K, B, C, D))
                         {
-                            A.Column--;
-                            A.Row++;
+                            A.YCoordinate--;
+                            A.XCoordinate++;
                         }
                         else
                         {
@@ -237,10 +221,10 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "ADR":
-                        if (A.Column < 7 && A.Row < 7 && !IsAvailableNextPosition(A.Row + 1, A.Column + 1, K, B, C, D))
+                        if (A.YCoordinate < 7 && A.XCoordinate < 7 && !IsAvailableNextPosition(A.XCoordinate + 1, A.YCoordinate + 1, K, B, C, D))
                         {
-                            A.Column++;
-                            A.Row++;
+                            A.YCoordinate++;
+                            A.XCoordinate++;
                         }
                         else
                         {
@@ -250,11 +234,11 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "BDL":
-                        if (B.Column > 0 && B.Row < 7 &&
-                            !IsAvailableNextPosition(B.Row + 1, B.Column - 1, A, K, C, D))
+                        if (B.YCoordinate > 0 && B.XCoordinate < 7 &&
+                            !IsAvailableNextPosition(B.XCoordinate + 1, B.YCoordinate - 1, A, K, C, D))
                         {
-                            B.Column--;
-                            B.Row++;
+                            B.YCoordinate--;
+                            B.XCoordinate++;
                         }
                         else
                         {
@@ -264,10 +248,10 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "BDR":
-                        if (B.Column < 7 && B.Row < 7 && !IsAvailableNextPosition(B.Row + 1, B.Column + 1, A, K, C, D))
+                        if (B.YCoordinate < 7 && B.XCoordinate < 7 && !IsAvailableNextPosition(B.XCoordinate + 1, B.YCoordinate + 1, A, K, C, D))
                         {
-                            B.Column++;
-                            B.Row++;
+                            B.YCoordinate++;
+                            B.XCoordinate++;
                         }
                         else
                         {
@@ -277,10 +261,10 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "CDL":
-                        if (C.Column > 0 && C.Row < 7 && !IsAvailableNextPosition(C.Row + 1, C.Column + 1, A, B, K, D))
+                        if (C.YCoordinate > 0 && C.XCoordinate < 7 && !IsAvailableNextPosition(C.XCoordinate + 1, C.YCoordinate + 1, A, B, K, D))
                         {
-                            C.Column--;
-                            C.Row++;
+                            C.YCoordinate--;
+                            C.XCoordinate++;
                         }
                         else
                         {
@@ -290,10 +274,10 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "CDR":
-                        if (C.Column < 7 && C.Row < 7 && !IsAvailableNextPosition(C.Row + 1, C.Column + 1, A, B, K, D))
+                        if (C.YCoordinate < 7 && C.XCoordinate < 7 && !IsAvailableNextPosition(C.XCoordinate + 1, C.YCoordinate + 1, A, B, K, D))
                         {
-                            C.Column++;
-                            C.Row++;
+                            C.YCoordinate++;
+                            C.XCoordinate++;
                         }
                         else
                         {
@@ -303,10 +287,10 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "DDL":
-                        if (D.Column > 0 && D.Row < 7 && !IsAvailableNextPosition(D.Row + 1, D.Column - 1, A, B, C, K))
+                        if (D.YCoordinate > 0 && D.XCoordinate < 7 && !IsAvailableNextPosition(D.XCoordinate + 1, D.YCoordinate - 1, A, B, C, K))
                         {
-                            D.Column--;
-                            D.Row++;
+                            D.YCoordinate--;
+                            D.XCoordinate++;
                         }
                         else
                         {
@@ -316,10 +300,10 @@ namespace KingSurvival.Common
                         }
                         break;
                     case "DDR":
-                        if (D.Column < 7 && D.Row < 7 && !IsAvailableNextPosition(D.Row + 1, D.Column + 1, A, B, C, K))
+                        if (D.YCoordinate < 7 && D.XCoordinate < 7 && !IsAvailableNextPosition(D.XCoordinate + 1, D.YCoordinate + 1, A, B, C, K))
                         {
-                            D.Column++;
-                            D.Row++;
+                            D.YCoordinate++;
+                            D.XCoordinate++;
                         }
                         else
                         {
@@ -338,21 +322,21 @@ namespace KingSurvival.Common
             return true;
         }
 
-        private static bool IsAvailableNextPosition(int notOverlapedRow, int notOverlapedColumn, MatrixCoordinates overlap1, MatrixCoordinates overlap2, MatrixCoordinates overlap3, MatrixCoordinates overlap4)
+        private static bool IsAvailableNextPosition(int notOverlapedXCoordinate, int notOverlapedYCoordinate, Pawn overlap1, Pawn overlap2, Pawn overlap3, Pawn overlap4)
         {
-            if (notOverlapedRow == overlap1.Row && notOverlapedColumn == overlap1.Column)
+            if (notOverlapedXCoordinate == overlap1.XCoordinate && notOverlapedYCoordinate == overlap1.YCoordinate)
             {
                 return false;
             }
-            else if (notOverlapedRow == overlap2.Row && notOverlapedColumn == overlap2.Column)
+            else if (notOverlapedXCoordinate == overlap2.XCoordinate && notOverlapedYCoordinate == overlap2.YCoordinate)
             {
                 return false;
             }
-            else if (notOverlapedRow == overlap3.Row && notOverlapedColumn == overlap3.Column)
+            else if (notOverlapedXCoordinate == overlap3.XCoordinate && notOverlapedYCoordinate == overlap3.YCoordinate)
             {
                 return false;
             }
-            else if (notOverlapedRow == overlap4.Row && notOverlapedColumn == overlap4.Column)
+            else if (notOverlapedXCoordinate == overlap4.XCoordinate && notOverlapedYCoordinate == overlap4.YCoordinate)
             {
                 return false;
             }

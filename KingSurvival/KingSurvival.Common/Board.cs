@@ -1,6 +1,5 @@
 ﻿namespace KingSurvival.Common
 {
-    using System;
     using System.Text;
 
     internal class Board
@@ -34,17 +33,17 @@
 
         public string GetImage(params Pawn[] pawns)
         {
-            image.Clear();
+            this.image.Clear();
 
-            AppendRowsLine(image);
+            this.AppendRowsLine(this.image);
 
-            AppendBorder(image);
+            this.AppendBorder(this.image);
 
-            AppendBoard(image, pawns);
+            this.AppendBoard(this.image, pawns);
 
-            AppendBorder(image);
+            this.AppendBorder(this.image);
 
-            return image.ToString();
+            return this.image.ToString();
         }
 
         private void AppendRowsLine(StringBuilder image)
@@ -68,7 +67,7 @@
 
                 for (int col = 0; col < this.BoardColumns; col++)
                 {
-                    char symbol = GetSymbol(row, col, pawns);
+                    char symbol = this.GetSymbol(row, col, pawns);
                     image.AppendFormat("{0} ", symbol);
                 }
 
@@ -82,14 +81,14 @@
             bool isPawnSymbol = false;
 
             for (int i = 0; i < pawns.Length; i++)
-			{
+            {
                 if (pawns[i].XCoordinate == row && pawns[i].YCoordinate == column)
                 {
                     isPawnSymbol = true;
                     symbol = pawns[i].Symbol;
                     break;
                 }
-			}
+            }
 
             if (!isPawnSymbol)
             {
@@ -112,9 +111,7 @@
             image.Append(new string(WhiteSpaceSymbol, 3));
 
             // Append border of '-' symbols
-            image.Append(new string(HorizontalBorderSymbol, 2 * this.BoardRows + 1));
-
-            image.AppendLine();
+            image.AppendLine(new string(HorizontalBorderSymbol, (2 * this.BoardRows) + 1));
         }
     }
 }

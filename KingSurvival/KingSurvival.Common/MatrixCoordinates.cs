@@ -1,7 +1,5 @@
 ﻿namespace KingSurvival.Common
 {
-    using System;
-
     internal struct MatrixCoordinates
     {
         private int row;

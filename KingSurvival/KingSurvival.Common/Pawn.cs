@@ -1,10 +1,8 @@
 ﻿namespace KingSurvival.Common
 {
-    using System;
-
     public class Pawn
     {
-        private char symbol;
+        private readonly char symbol;
         private MatrixCoordinates coordinates;
 
         public Pawn(char symbol, int xCoordinate, int yCoordinate)
