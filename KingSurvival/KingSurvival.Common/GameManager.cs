@@ -26,8 +26,8 @@ namespace KingSurvival.Common
                 if (pawnKing.XCoordinate == 0)
                 {
                     isKingWinner = true;
-                    
-                   //DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, pawnKing);
+
+                    //DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, pawnKing);
 
                     // game ends
                     return true;
@@ -73,7 +73,7 @@ namespace KingSurvival.Common
                 canKingGoUpRight = !(IsAvailableNextPosition(pawnKing.XCoordinate - 1, pawnKing.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD));
                 canKingGoDownLeft = !(IsAvailableNextPosition(pawnKing.XCoordinate + 1, pawnKing.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD));
                 canKingGoDownRight = !(IsAvailableNextPosition(pawnKing.XCoordinate + 1, pawnKing.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD));
-            
+
 
                 bool isAnyOfKingMovesAvaiable = canKingGoDownRight || canKingGoDownLeft || canKingGoUpLeft || canKingGoUpRight;
 
@@ -82,7 +82,7 @@ namespace KingSurvival.Common
                     isKingWinner = false;
 
                     //DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, pawnKing);
-              
+
                     // game ends;
                     return true;
                 }
@@ -92,9 +92,9 @@ namespace KingSurvival.Common
                     !proverka1(pawnC, pawnA, pawnB, pawnD, pawnKing) &&
                     !proverka1(pawnD, pawnA, pawnB, pawnC, pawnKing))
                 {
-                    
+
                     isKingWinner = true;
-                
+
                     //DisplayCurrentEndOnConsole(turn, pawnA, pawnB, pawnC, pawnD, pawnKing);
                     // game ends;
                     return true;
@@ -135,215 +135,278 @@ namespace KingSurvival.Common
             return true;
         }
 
-        public static bool isMoveLeft(int turn, Pawn A, Pawn B, Pawn C, Pawn D, Pawn K)
+        public static bool IsValidMove(int turn, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn king)
         {
+            bool isValid;
+            string command;
             if (turn % 2 == 1)
             {
                 Console.Write("King’s turn: ");
-                string move = Console.ReadLine();
-                switch (move)
-                {
-                    case "KUL":
-                        if (K.YCoordinate > 0 && K.XCoordinate > 0 && !IsAvailableNextPosition(K.XCoordinate - 1, K.YCoordinate - 1, A, B, C, D))
-                        {
-                            K.YCoordinate--;
-                            K.XCoordinate--;
-                        }
-                        else
-                        {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
-                            return false;
-                        }
-                        break;
-                    case "KUR": // if KUR... gotta love these moments
-                        if (K.YCoordinate < 7 && K.XCoordinate > 0 && !IsAvailableNextPosition(K.XCoordinate - 1, K.YCoordinate + 1, A, B, C, D))
-                        {
-                            K.YCoordinate++;
-                            K.XCoordinate--;
-                        }
-                        else
-                        {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
-                            return false;
-                        }
-                        break;
-                    case "KDL":
-                        if (K.YCoordinate > 0 && K.XCoordinate < 7 && !IsAvailableNextPosition(K.XCoordinate + 1, K.YCoordinate - 1, A, B, C, D))
-                        {
-                            K.YCoordinate--;
-                            K.XCoordinate++;
-                        }
-                        else
-                        {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
-                            return false;
-                        }
-                        break;
-                    case "KDR":
-                        if (K.YCoordinate < 7 && K.XCoordinate < 7 && !IsAvailableNextPosition(K.XCoordinate + 1, K.YCoordinate + 1, A, B, C, D))
-                        {
-                            K.YCoordinate++;
-                            K.XCoordinate++;
-                        }
-                        else
-                        {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
-                            return false;
-                        }
-                        break;
-                    default:
-                        Console.Write("Illegal move!");
-                        Console.ReadKey();
-                        return false;
-                }
+                command = Console.ReadLine().ToLower();
+                isValid = IsValidKingMove(command, pawnA, pawnB, pawnC, pawnD, king);
             }
             else
             {
                 Console.Write("Pawns’ turn: ");
-                string move = Console.ReadLine();
-                switch (move)
-                {
-                    case "ADL":
-                        if (A.YCoordinate > 0 && A.XCoordinate < 7 && !IsAvailableNextPosition(A.XCoordinate + 1, A.YCoordinate - 1, K, B, C, D))
-                        {
-                            A.YCoordinate--;
-                            A.XCoordinate++;
-                        }
-                        else
-                        {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
-                            return false;
-                        }
-                        break;
-                    case "ADR":
-                        if (A.YCoordinate < 7 && A.XCoordinate < 7 && !IsAvailableNextPosition(A.XCoordinate + 1, A.YCoordinate + 1, K, B, C, D))
-                        {
-                            A.YCoordinate++;
-                            A.XCoordinate++;
-                        }
-                        else
-                        {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
-                            return false;
-                        }
-                        break;
-                    case "BDL":
-                        if (B.YCoordinate > 0 && B.XCoordinate < 7 &&
-                            !IsAvailableNextPosition(B.XCoordinate + 1, B.YCoordinate - 1, A, K, C, D))
-                        {
-                            B.YCoordinate--;
-                            B.XCoordinate++;
-                        }
-                        else
-                        {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
-                            return false;
-                        }
-                        break;
-                    case "BDR":
-                        if (B.YCoordinate < 7 && B.XCoordinate < 7 && !IsAvailableNextPosition(B.XCoordinate + 1, B.YCoordinate + 1, A, K, C, D))
-                        {
-                            B.YCoordinate++;
-                            B.XCoordinate++;
-                        }
-                        else
-                        {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
-                            return false;
-                        }
-                        break;
-                    case "CDL":
-                        if (C.YCoordinate > 0 && C.XCoordinate < 7 && !IsAvailableNextPosition(C.XCoordinate + 1, C.YCoordinate + 1, A, B, K, D))
-                        {
-                            C.YCoordinate--;
-                            C.XCoordinate++;
-                        }
-                        else
-                        {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
-                            return false;
-                        }
-                        break;
-                    case "CDR":
-                        if (C.YCoordinate < 7 && C.XCoordinate < 7 && !IsAvailableNextPosition(C.XCoordinate + 1, C.YCoordinate + 1, A, B, K, D))
-                        {
-                            C.YCoordinate++;
-                            C.XCoordinate++;
-                        }
-                        else
-                        {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
-                            return false;
-                        }
-                        break;
-                    case "DDL":
-                        if (D.YCoordinate > 0 && D.XCoordinate < 7 && !IsAvailableNextPosition(D.XCoordinate + 1, D.YCoordinate - 1, A, B, C, K))
-                        {
-                            D.YCoordinate--;
-                            D.XCoordinate++;
-                        }
-                        else
-                        {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
-                            return false;
-                        }
-                        break;
-                    case "DDR":
-                        if (D.YCoordinate < 7 && D.XCoordinate < 7 && !IsAvailableNextPosition(D.XCoordinate + 1, D.YCoordinate + 1, A, B, C, K))
-                        {
-                            D.YCoordinate++;
-                            D.XCoordinate++;
-                        }
-                        else
-                        {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
-                            return false;
-                        }
-                        break;
-                    default:
-                        Console.Write("Illegal move!");
-                        Console.ReadKey();
-                        return false;
-                }
+                command = Console.ReadLine().ToLower();
+                isValid = IsValidPawnMove(command, pawnA, pawnB, pawnC, pawnD, king);
             }
 
-            return true;
+            return isValid;
         }
 
-        private static bool IsAvailableNextPosition(int notOverlapedXCoordinate, int notOverlapedYCoordinate, Pawn overlap1, Pawn overlap2, Pawn overlap3, Pawn overlap4)
+        private static bool IsValidPawnMove(string command, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn king)
         {
-            if (notOverlapedXCoordinate == overlap1.XCoordinate && notOverlapedYCoordinate == overlap1.YCoordinate)
+            bool isValid;
+            switch (command)
             {
-                return false;
+                case "adl":
+                    {
+                        if (pawnA.YCoordinate > 0 && pawnA.XCoordinate < 7 && IsAvailableNextPosition(pawnA.XCoordinate + 1, pawnA.YCoordinate - 1, king, pawnB, pawnC, pawnD))
+                        {
+                            pawnA.YCoordinate--;
+                            pawnA.XCoordinate++;
+                            isValid = true;
+                        }
+                        else
+                        {
+                            Console.Write("Invalid move!");
+                            Console.ReadKey();
+                            isValid = false;
+                        }
+                        break;
+                    }
+                case "adr":
+                    {
+                        if (pawnA.YCoordinate < 7 && pawnA.XCoordinate < 7 && IsAvailableNextPosition(pawnA.XCoordinate + 1, pawnA.YCoordinate + 1, king, pawnB, pawnC, pawnD))
+                        {
+                            pawnA.YCoordinate++;
+                            pawnA.XCoordinate++;
+                            isValid = true;
+                        }
+                        else
+                        {
+                            Console.Write("Invalid move!");
+                            Console.ReadKey();
+                            isValid = false;
+                        }
+                        break;
+                    }
+                case "bdl":
+                    {
+                        if (pawnB.YCoordinate > 0 && pawnB.XCoordinate < 7 && IsAvailableNextPosition(pawnB.XCoordinate + 1, pawnB.YCoordinate - 1, pawnA, king, pawnC, pawnD))
+                        {
+                            pawnB.YCoordinate--;
+                            pawnB.XCoordinate++;
+                            isValid = true;
+                        }
+                        else
+                        {
+                            Console.Write("Invalid move!");
+                            Console.ReadKey();
+                            isValid = false;
+                        }
+                        break;
+                    }
+                case "bdr":
+                    {
+                        if (pawnB.YCoordinate < 7 && pawnB.XCoordinate < 7 && IsAvailableNextPosition(pawnB.XCoordinate + 1, pawnB.YCoordinate + 1, pawnA, king, pawnC, pawnD))
+                        {
+                            pawnB.YCoordinate++;
+                            pawnB.XCoordinate++;
+                            isValid = true;
+                        }
+                        else
+                        {
+                            Console.Write("Invalid move!");
+                            Console.ReadKey();
+                            isValid = false;
+                        }
+                        break;
+                    }
+                case "cdl":
+                    {
+                        if (pawnC.YCoordinate > 0 && pawnC.XCoordinate < 7 && IsAvailableNextPosition(pawnC.XCoordinate + 1, pawnC.YCoordinate + 1, pawnA, pawnB, king, pawnD))
+                        {
+                            pawnC.YCoordinate--;
+                            pawnC.XCoordinate++;
+                            isValid = true;
+                        }
+                        else
+                        {
+                            Console.Write("Invalid move!");
+                            Console.ReadKey();
+                            isValid = false;
+                        }
+                        break;
+                    }
+                case "cdr":
+                    {
+                        if (pawnC.YCoordinate < 7 && pawnC.XCoordinate < 7 && IsAvailableNextPosition(pawnC.XCoordinate + 1, pawnC.YCoordinate + 1, pawnA, pawnB, king, pawnD))
+                        {
+                            pawnC.YCoordinate++;
+                            pawnC.XCoordinate++;
+                            isValid = true;
+                        }
+                        else
+                        {
+                            Console.Write("Invalid move!");
+                            Console.ReadKey();
+                            isValid = false;
+                        }
+                        break;
+                    }
+                case "ddl":
+                    {
+                        if (pawnD.YCoordinate > 0 && pawnD.XCoordinate < 7 && IsAvailableNextPosition(pawnD.XCoordinate + 1, pawnD.YCoordinate - 1, pawnA, pawnB, pawnC, king))
+                        {
+                            pawnD.YCoordinate--;
+                            pawnD.XCoordinate++;
+                            isValid = true;
+                        }
+                        else
+                        {
+                            Console.Write("Invalid move!");
+                            Console.ReadKey();
+                            isValid = false;
+                        }
+                        break;
+                    }
+                case "ddr":
+                    {
+                        if (pawnD.YCoordinate < 7 && pawnD.XCoordinate < 7 && IsAvailableNextPosition(pawnD.XCoordinate + 1, pawnD.YCoordinate + 1, pawnA, pawnB, pawnC, king))
+                        {
+                            pawnD.YCoordinate++;
+                            pawnD.XCoordinate++;
+                            isValid = true;
+                        }
+                        else
+                        {
+                            Console.Write("Invalid move!");
+                            Console.ReadKey();
+                            isValid = false;
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        Console.Write("Invalid move!");
+                        Console.ReadKey();
+                        isValid = false;
+                    }
+
+                    return isValid;
             }
-            else if (notOverlapedXCoordinate == overlap2.XCoordinate && notOverlapedYCoordinate == overlap2.YCoordinate)
+            return isValid;
+        }
+
+        private static bool IsValidKingMove(string command, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn king)
+        {
+            bool isValid;
+            switch (command)
             {
-                return false;
+                case "kul":
+                    {
+                        if (king.YCoordinate > 0 && king.XCoordinate > 0 && IsAvailableNextPosition(king.XCoordinate - 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
+                        {
+                            king.YCoordinate--;
+                            king.XCoordinate--;
+                            isValid = true;
+                        }
+                        else
+                        {
+                            Console.Write("Illegal move!");
+                            Console.ReadKey();
+                            isValid = false;
+                        }
+                        break;
+                    }
+                case "kur":
+                    {
+                        if (king.YCoordinate < 7 && king.XCoordinate > 0 && IsAvailableNextPosition(king.XCoordinate - 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
+                        {
+                            king.YCoordinate++;
+                            king.XCoordinate--;
+                            isValid = true;
+                        }
+                        else
+                        {
+                            Console.Write("Illegal move!");
+                            Console.ReadKey();
+                            isValid = false;
+                        }
+                        break;
+                    }
+                case "kdl":
+                    {
+                        if (king.YCoordinate > 0 && king.XCoordinate < 7 && IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
+                        {
+                            king.YCoordinate--;
+                            king.XCoordinate++;
+                            isValid = true;
+                        }
+                        else
+                        {
+                            Console.Write("Illegal move!");
+                            Console.ReadKey();
+                            isValid = false;
+                        }
+                        break;
+                    }
+                case "kdr":
+                    {
+                        if (king.YCoordinate < 7 && king.XCoordinate < 7 && IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
+                        {
+                            king.YCoordinate++;
+                            king.XCoordinate++;
+                            isValid = true;
+                        }
+                        else
+                        {
+                            Console.Write("Illegal move!");
+                            Console.ReadKey();
+                            isValid = false;
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        Console.Write("Illegal move!");
+                        Console.ReadKey();
+                        isValid = false;
+                    }
+
+                    return isValid;
             }
-            else if (notOverlapedXCoordinate == overlap3.XCoordinate && notOverlapedYCoordinate == overlap3.YCoordinate)
+            return isValid;
+        }
+
+        private static bool IsAvailableNextPosition(int isAvaliableXCoordinate, int isAvaliableYCoordinate, Pawn figureOne, Pawn figureTwo, Pawn figureThree, Pawn figureFour)
+        {
+            bool isAvalable;
+
+            if (isAvaliableXCoordinate == figureOne.XCoordinate && isAvaliableYCoordinate == figureOne.YCoordinate)
             {
-                return false;
+                isAvalable = false;
             }
-            else if (notOverlapedXCoordinate == overlap4.XCoordinate && notOverlapedYCoordinate == overlap4.YCoordinate)
+            else if (isAvaliableXCoordinate == figureTwo.XCoordinate && isAvaliableYCoordinate == figureTwo.YCoordinate)
             {
-                return false;
+                isAvalable = false;
+            }
+            else if (isAvaliableXCoordinate == figureThree.XCoordinate && isAvaliableYCoordinate == figureThree.YCoordinate)
+            {
+                isAvalable = false;
+            }
+            else if (isAvaliableXCoordinate == figureFour.XCoordinate && isAvaliableYCoordinate == figureFour.YCoordinate)
+            {
+                isAvalable = false;
             }
             else
             {
-                return true;
+                isAvalable = true;
             }
+
+            return isAvalable;
         }
     }
 }

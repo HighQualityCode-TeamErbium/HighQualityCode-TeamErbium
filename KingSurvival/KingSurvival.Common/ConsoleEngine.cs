@@ -47,7 +47,7 @@
                 {
                     Console.Clear();
                     Console.WriteLine(this.board.GetImage(pawnA, pawnB, pawnC, pawnD, pawnKing));
-                    isValidMove = GameManager.isMoveLeft(currentMove, pawnA, pawnB, pawnC, pawnD, pawnKing);
+                    isValidMove = GameManager.IsValidMove(currentMove, pawnA, pawnB, pawnC, pawnD, pawnKing);
                 } while (!isValidMove);
 
                 endOfGame = GameManager.HasGameEnded(currentMove, pawnA, pawnB, pawnC, pawnD, pawnKing);
