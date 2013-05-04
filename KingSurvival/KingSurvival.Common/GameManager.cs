@@ -4,11 +4,12 @@ namespace KingSurvival.Common
 {
     internal static class GameManager
     {
-        private static bool isKingOnTurn;
-        private static bool isKingWinner;
+        
 
         public static bool HasGameEnded(int turn, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn pawnKing)
         {
+            bool isKingOnTurn = false;
+            bool isKingWinner = false;
             // TODO : Refactor this code (yoan)
             #region /*Change turn input*/
             if (turn % 2 == 1)
@@ -45,7 +46,7 @@ namespace KingSurvival.Common
                 bool canKingGoUpRight = true;
                 bool canKingGoDownLeft = true;
                 bool canKingGoDownRight = true;
-                // checks is king over some border
+                // checks if king over some border
                 if (pawnKing.XCoordinate == 0)
                 {
                     canKingGoUpLeft = false;
@@ -87,10 +88,10 @@ namespace KingSurvival.Common
                     return true;
                 }
 
-                if (!proverka1(pawnA, pawnB, pawnC, pawnD, pawnKing) &&
-                    !proverka1(pawnB, pawnA, pawnC, pawnD, pawnKing) &&
-                    !proverka1(pawnC, pawnA, pawnB, pawnD, pawnKing) &&
-                    !proverka1(pawnD, pawnA, pawnB, pawnC, pawnKing))
+                if (IsKingTrapped(pawnA, pawnB, pawnC, pawnD, pawnKing) &&
+                    IsKingTrapped(pawnB, pawnA, pawnC, pawnD, pawnKing) &&
+                    IsKingTrapped(pawnC, pawnA, pawnB, pawnD, pawnKing) &&
+                    IsKingTrapped(pawnD, pawnA, pawnB, pawnC, pawnKing))
                 {
 
                     isKingWinner = true;
@@ -104,35 +105,35 @@ namespace KingSurvival.Common
             }
         }
 
-        private static bool proverka1(Pawn kingPawn, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private static bool IsKingTrapped(Pawn kingPawn, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             if (kingPawn.XCoordinate == 7)
             {
-                return false;
+                return true;
             }
             else if (kingPawn.YCoordinate > 0 && kingPawn.YCoordinate < 7)
             {
                 if (IsAvailableNextPosition(kingPawn.XCoordinate + 1, kingPawn.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD) &&
                     IsAvailableNextPosition(kingPawn.XCoordinate + 1, kingPawn.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
                 {
-                    return false;
+                    return true;
                 }
             }
             else if (kingPawn.YCoordinate == 0)
             {
                 if (IsAvailableNextPosition(kingPawn.XCoordinate + 1, kingPawn.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
                 {
-                    return false;
+                    return true;
                 }
             }
             else if (kingPawn.YCoordinate == 4 + 3)
             {
                 if (IsAvailableNextPosition(kingPawn.XCoordinate + 1, kingPawn.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
                 {
-                    return false;
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
 
         public static bool IsValidMove(int turn, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn king)
