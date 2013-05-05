@@ -6,6 +6,7 @@
     {
         private const int BoardRows = 8;
         private const int BoardColumns = 8;
+        private bool isKingWinner = false;
 
         private Board board;
 
@@ -16,7 +17,7 @@
 
         private void DisplayCurrentEndOnConsole(int turn, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn pawnKing)
         {
-            if (true) // isKingWinner
+            if (isKingWinner)
             {
                 Console.Clear();
                 Console.WriteLine(this.board.GetImage(pawnA, pawnB, pawnC, pawnD, pawnKing));
@@ -51,8 +52,14 @@
                 } while (!isValidMove);
 
                 endOfGame = GameManager.HasGameEnded(currentMove, pawnA, pawnB, pawnC, pawnD, pawnKing);
+                isKingWinner = GameManager.HasKingWon(currentMove,endOfGame, pawnA, pawnB, pawnC, pawnD, pawnKing);
                 currentMove++;
             } while (!endOfGame);
+
+            if (endOfGame)
+            {
+                DisplayCurrentEndOnConsole(currentMove, pawnA, pawnB, pawnC, pawnD, pawnKing);
+            }
         }
     }
 }
