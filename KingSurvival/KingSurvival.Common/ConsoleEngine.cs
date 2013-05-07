@@ -8,25 +8,25 @@
         private const int BoardColumns = 8;
         private bool isKingWinner = false;
 
-        private Board board;
+        private readonly Board board;
 
         public ConsoleEngine()
         {
             this.board = new Board(BoardRows, BoardColumns);
         }
 
-        private void DisplayCurrentEndOnConsole(int turn, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn pawnKing)
+        private void DisplayCurrentEndOnConsole(int turn, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             if (isKingWinner)
             {
                 Console.Clear();
-                Console.WriteLine(this.board.GetImage(pawnA, pawnB, pawnC, pawnD, pawnKing));
+                Console.WriteLine(this.board.GetImage(king, pawnA, pawnB, pawnC, pawnD));
                 Console.WriteLine("King wins in {0} turns.", turn / 2);
             }
             else
             {
                 Console.Clear();
-                this.board.GetImage(pawnA, pawnB, pawnC, pawnD, pawnKing);
+                this.board.GetImage(pawnA, pawnB, pawnC, pawnD, king);
                 Console.WriteLine("King loses.");
             }
         }
@@ -37,7 +37,7 @@
             Pawn pawnB = new Pawn('B', 0, 2);
             Pawn pawnC = new Pawn('C', 0, 4);
             Pawn pawnD = new Pawn('D', 0, 6);
-            Pawn pawnKing = new Pawn('K', 7, 3);
+            King king = new King(7, 3);
 
             bool endOfGame = false;
             int currentMove = 1;
@@ -47,18 +47,18 @@
                 do
                 {
                     Console.Clear();
-                    Console.WriteLine(this.board.GetImage(pawnA, pawnB, pawnC, pawnD, pawnKing));
-                    isValidMove = GameManager.IsValidMove(currentMove, pawnA, pawnB, pawnC, pawnD, pawnKing);
+                    Console.WriteLine(this.board.GetImage(king, pawnA, pawnB, pawnC, pawnD));
+                    isValidMove = GameManager.IsValidMove(currentMove, king, pawnA, pawnB, pawnC, pawnD);
                 } while (!isValidMove);
 
-                endOfGame = GameManager.HasGameEnded(currentMove, pawnA, pawnB, pawnC, pawnD, pawnKing);
-                isKingWinner = GameManager.HasKingWon(currentMove,endOfGame, pawnA, pawnB, pawnC, pawnD, pawnKing);
+                endOfGame = GameManager.HasGameEnded(currentMove, king, pawnA, pawnB, pawnC, pawnD);
+                isKingWinner = GameManager.HasKingWon(currentMove, endOfGame, king, pawnA, pawnB, pawnC, pawnD);
                 currentMove++;
             } while (!endOfGame);
 
             if (endOfGame)
             {
-                DisplayCurrentEndOnConsole(currentMove, pawnA, pawnB, pawnC, pawnD, pawnKing);
+                DisplayCurrentEndOnConsole(currentMove, king, pawnA, pawnB, pawnC, pawnD);
             }
         }
     }

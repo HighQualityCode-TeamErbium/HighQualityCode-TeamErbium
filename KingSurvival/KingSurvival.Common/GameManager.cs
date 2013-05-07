@@ -1,25 +1,25 @@
-﻿using System;
-
-namespace KingSurvival.Common
+﻿namespace KingSurvival.Common
 {
+    using System;
+
     internal static class GameManager
     {
-        public static bool HasGameEnded(int gameTurn, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn pawnKing)
+        public static bool HasGameEnded(int gameTurn, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool isKingOnTurn = false;            
             // on every odd game t king is on turn
             isKingOnTurn = (gameTurn % 2 == 1);
             // if king is not on top of board game continues
-            if (isKingOnTurn && pawnKing.XCoordinate == 0)
+            if (isKingOnTurn && king.XCoordinate == 0)
             {
                 return true;
             }
             else
             {
                 // king is trapped by pawns -> game ends, king loses
-                if (!CanKingMove(pawnA, pawnB, pawnC, pawnD, pawnKing) ||
-                    (IsKingTrapped(pawnA, pawnB, pawnC, pawnD, pawnKing) && IsKingTrapped(pawnB, pawnA, pawnC, pawnD, pawnKing) &&
-                    IsKingTrapped(pawnC, pawnA, pawnB, pawnD, pawnKing) && IsKingTrapped(pawnD, pawnA, pawnB, pawnC, pawnKing)))
+                if (!CanKingMove(king, pawnA, pawnB, pawnC, pawnD) ||
+                    (IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD) && IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD) &&
+                    IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD) && IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD)))
                 {
                     return true;
                 }
@@ -30,7 +30,7 @@ namespace KingSurvival.Common
             }
         }
 
-        internal static bool HasKingWon(int gameTurn, bool gameCondition, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn pawnKing)
+        internal static bool HasKingWon(int gameTurn, bool gameCondition, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool isGameEnded = gameCondition;
             bool isKingOnTurn = (gameTurn % 2 == 1);
@@ -38,19 +38,19 @@ namespace KingSurvival.Common
             if (isGameEnded)
             {
                 // if king is on top is winner
-                if (isKingOnTurn && pawnKing.XCoordinate == 7)
+                if (isKingOnTurn && king.XCoordinate == 7)
                 {
                     return true;
                 }
                 else
                 {
                     // if king is trapped -> lost
-                    if (!CanKingMove(pawnA, pawnB, pawnC, pawnD, pawnKing))
+                    if (!CanKingMove(king, pawnA, pawnB, pawnC, pawnD))
                     {
                         return false;
-                    }//while king is not on top and not trapped
-                    else if (IsKingTrapped(pawnA, pawnB, pawnC, pawnD, pawnKing) && IsKingTrapped(pawnB, pawnA, pawnC, pawnD, pawnKing) &&
-                    IsKingTrapped(pawnC, pawnA, pawnB, pawnD, pawnKing) && IsKingTrapped(pawnD, pawnA, pawnB, pawnC, pawnKing))
+                    } // while king is not on top and not trapped
+                    else if (IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD) && IsKingTrapped(king, pawnB, pawnA, pawnC, pawnD) &&
+                    IsKingTrapped(king, pawnC, pawnA, pawnB, pawnD) && IsKingTrapped(king, pawnD, pawnA, pawnB, pawnC))
                     {
                         return true;
                     }
@@ -66,107 +66,108 @@ namespace KingSurvival.Common
             }
         }
 
-        private static bool CanKingMove(Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn pawnKing)
+        private static bool CanKingMove(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             // determine king restrictions
-            bool canKingGoUpLeft = IsKingUpLeftMovementAvailable(pawnKing, pawnA, pawnB, pawnC, pawnD);
-            bool canKingGoDownLeft = IsKingDownLeftMovementAvailable(pawnKing, pawnA, pawnB, pawnC, pawnD);
-            bool canKingGoUpRight = IsKingUpRightMovementAvailable(pawnKing, pawnA, pawnB, pawnC, pawnD);
-            bool canKingGoDownRight = IsKingDownRightMovementAvailable(pawnKing, pawnA, pawnB, pawnC, pawnD);
+            bool canKingGoUpLeft = IsKingUpLeftMovementAvailable(king, pawnA, pawnB, pawnC, pawnD);
+            bool canKingGoDownLeft = IsKingDownLeftMovementAvailable(king, pawnA, pawnB, pawnC, pawnD);
+            bool canKingGoUpRight = IsKingUpRightMovementAvailable(king, pawnA, pawnB, pawnC, pawnD);
+            bool canKingGoDownRight = IsKingDownRightMovementAvailable(king, pawnA, pawnB, pawnC, pawnD);
             // check if all 
             bool isAnyOfKingMovesAvaiable = canKingGoDownRight || canKingGoDownLeft || canKingGoUpLeft || canKingGoUpRight;
             
             return isAnyOfKingMovesAvaiable;
         }
 
-        private static bool IsKingUpLeftMovementAvailable(Pawn pawnKing, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private static bool IsKingUpLeftMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool canKingGoUpLeft = true;
             // check if king is near border
-            if (pawnKing.XCoordinate == 0 || pawnKing.YCoordinate == 0)
+            if (king.XCoordinate == 0 || king.YCoordinate == 0)
             {
                 canKingGoUpLeft = false;
             }
             // check if pawn is near king
-            canKingGoUpLeft = IsAvailableNextPosition(pawnKing.XCoordinate - 1, pawnKing.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD);
+            canKingGoUpLeft = IsAvailableNextPosition(king.XCoordinate - 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD);
      
             return canKingGoUpLeft;
         }
 
-        private static bool IsKingDownLeftMovementAvailable(Pawn pawnKing, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private static bool IsKingDownLeftMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool canKingGoDownLeft = true;
             // check if king is near border
-            if (pawnKing.XCoordinate == 7 || pawnKing.YCoordinate == 0)
+            if (king.XCoordinate == 7 || king.YCoordinate == 0)
             {
                 canKingGoDownLeft = false;
             }
             // check if pawn is near king
-            canKingGoDownLeft = (IsAvailableNextPosition(pawnKing.XCoordinate + 1, pawnKing.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD));
+            canKingGoDownLeft = IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD);
 
             return canKingGoDownLeft;
         }
 
-        private static bool IsKingUpRightMovementAvailable(Pawn pawnKing, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private static bool IsKingUpRightMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool canKingGoUpRight = true;
             // check if king is near border
-            if (pawnKing.XCoordinate == 0 || pawnKing.YCoordinate == 7)
+            if (king.XCoordinate == 0 || king.YCoordinate == 7)
             {
                 canKingGoUpRight = false;
             }
             // check if pawn is near king
-            canKingGoUpRight = IsAvailableNextPosition(pawnKing.XCoordinate - 1, pawnKing.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD);
+            canKingGoUpRight = IsAvailableNextPosition(king.XCoordinate - 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD);
 
             return canKingGoUpRight;
         }
 
-        private static bool IsKingDownRightMovementAvailable(Pawn pawnKing, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private static bool IsKingDownRightMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool canKingGoDownRight = true;
             // check if king is near border
-            if (pawnKing.XCoordinate == 7 || pawnKing.YCoordinate == 7)
+            if (king.XCoordinate == 7 || king.YCoordinate == 7)
             {
                 canKingGoDownRight = false;
             }
             // check if pawn is near king
-            canKingGoDownRight = (IsAvailableNextPosition(pawnKing.XCoordinate + 1, pawnKing.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD));
+            canKingGoDownRight = IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD);
 
             return canKingGoDownRight;
         }
         // TODO : Immediately change name !!!
-        private static bool IsKingTrapped(Pawn kingPawn, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private static bool IsKingTrapped(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
-            if (kingPawn.XCoordinate == 7)
+            if (king.XCoordinate == 7)
             {
                 return false;
             }
-            else if (kingPawn.YCoordinate > 0 && kingPawn.YCoordinate < 7)
+            else if (king.YCoordinate > 0 && king.YCoordinate < 7)
             {
-                if (IsAvailableNextPosition(kingPawn.XCoordinate + 1, kingPawn.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD) &&
-                    IsAvailableNextPosition(kingPawn.XCoordinate + 1, kingPawn.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
+                if (IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD) &&
+                    IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     return false;
                 }
             }
-            else if (kingPawn.YCoordinate == 0)
+            else if (king.YCoordinate == 0)
             {
-                if (IsAvailableNextPosition(kingPawn.XCoordinate + 1, kingPawn.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
+                if (IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     return false;
                 }
             }
-            else if (kingPawn.YCoordinate == 7)
+            else if (king.YCoordinate == 7)
             {
-                if (IsAvailableNextPosition(kingPawn.XCoordinate + 1, kingPawn.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
+                if (IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
-        public static bool IsValidMove(int turn, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn king)
+        public static bool IsValidMove(int turn, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool isValid;
             string command;
@@ -174,26 +175,27 @@ namespace KingSurvival.Common
             {
                 Console.Write("King’s turn: ");
                 command = Console.ReadLine().ToLower();
-                isValid = IsValidKingMove(command, pawnA, pawnB, pawnC, pawnD, king);
+                isValid = IsValidKingMove(command, king, pawnA, pawnB, pawnC, pawnD);
             }
             else
             {
                 Console.Write("Pawns’ turn: ");
                 command = Console.ReadLine().ToLower();
-                isValid = IsValidPawnMove(command, pawnA, pawnB, pawnC, pawnD, king);
+                isValid = IsValidPawnMove(command, king, pawnA, pawnB, pawnC, pawnD);
             }
 
             return isValid;
         }
 
-        private static bool IsValidPawnMove(string command, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn king)
+        private static bool IsValidPawnMove(string command, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool isValid;
             switch (command)
             {
                 case "adl":
                     {
-                        if (pawnA.YCoordinate > 0 && pawnA.XCoordinate < 7 && IsAvailableNextPosition(pawnA.XCoordinate + 1, pawnA.YCoordinate - 1, king, pawnB, pawnC, pawnD))
+                        if (pawnA.YCoordinate > 0 && pawnA.XCoordinate < 7 && 
+                            IsAvailableNextPosition(pawnA.XCoordinate + 1, pawnA.YCoordinate - 1, king, pawnB, pawnC, pawnD))
                         {
                             pawnA.YCoordinate--;
                             pawnA.XCoordinate++;
@@ -205,11 +207,13 @@ namespace KingSurvival.Common
                             Console.ReadKey();
                             isValid = false;
                         }
+
                         break;
                     }
                 case "adr":
                     {
-                        if (pawnA.YCoordinate < 7 && pawnA.XCoordinate < 7 && IsAvailableNextPosition(pawnA.XCoordinate + 1, pawnA.YCoordinate + 1, king, pawnB, pawnC, pawnD))
+                        if (pawnA.YCoordinate < 7 && pawnA.XCoordinate < 7 && 
+                            IsAvailableNextPosition(pawnA.XCoordinate + 1, pawnA.YCoordinate + 1, king, pawnB, pawnC, pawnD))
                         {
                             pawnA.YCoordinate++;
                             pawnA.XCoordinate++;
@@ -221,11 +225,13 @@ namespace KingSurvival.Common
                             Console.ReadKey();
                             isValid = false;
                         }
+
                         break;
                     }
                 case "bdl":
                     {
-                        if (pawnB.YCoordinate > 0 && pawnB.XCoordinate < 7 && IsAvailableNextPosition(pawnB.XCoordinate + 1, pawnB.YCoordinate - 1, pawnA, king, pawnC, pawnD))
+                        if (pawnB.YCoordinate > 0 && pawnB.XCoordinate < 7 && 
+                            IsAvailableNextPosition(pawnB.XCoordinate + 1, pawnB.YCoordinate - 1, king, pawnA, pawnC, pawnD))
                         {
                             pawnB.YCoordinate--;
                             pawnB.XCoordinate++;
@@ -241,7 +247,8 @@ namespace KingSurvival.Common
                     }
                 case "bdr":
                     {
-                        if (pawnB.YCoordinate < 7 && pawnB.XCoordinate < 7 && IsAvailableNextPosition(pawnB.XCoordinate + 1, pawnB.YCoordinate + 1, pawnA, king, pawnC, pawnD))
+                        if (pawnB.YCoordinate < 7 && pawnB.XCoordinate < 7 &&
+                            IsAvailableNextPosition(pawnB.XCoordinate + 1, pawnB.YCoordinate + 1, king, pawnA, pawnC, pawnD))
                         {
                             pawnB.YCoordinate++;
                             pawnB.XCoordinate++;
@@ -253,11 +260,13 @@ namespace KingSurvival.Common
                             Console.ReadKey();
                             isValid = false;
                         }
+
                         break;
                     }
                 case "cdl":
                     {
-                        if (pawnC.YCoordinate > 0 && pawnC.XCoordinate < 7 && IsAvailableNextPosition(pawnC.XCoordinate + 1, pawnC.YCoordinate + 1, pawnA, pawnB, king, pawnD))
+                        if (pawnC.YCoordinate > 0 && pawnC.XCoordinate < 7 &&
+                            IsAvailableNextPosition(pawnC.XCoordinate + 1, pawnC.YCoordinate + 1, king, pawnA, pawnB, pawnD))
                         {
                             pawnC.YCoordinate--;
                             pawnC.XCoordinate++;
@@ -273,7 +282,8 @@ namespace KingSurvival.Common
                     }
                 case "cdr":
                     {
-                        if (pawnC.YCoordinate < 7 && pawnC.XCoordinate < 7 && IsAvailableNextPosition(pawnC.XCoordinate + 1, pawnC.YCoordinate + 1, pawnA, pawnB, king, pawnD))
+                        if (pawnC.YCoordinate < 7 && pawnC.XCoordinate < 7 &&
+                            IsAvailableNextPosition(pawnC.XCoordinate + 1, pawnC.YCoordinate + 1, king, pawnA, pawnB, pawnD))
                         {
                             pawnC.YCoordinate++;
                             pawnC.XCoordinate++;
@@ -285,11 +295,13 @@ namespace KingSurvival.Common
                             Console.ReadKey();
                             isValid = false;
                         }
+
                         break;
                     }
                 case "ddl":
                     {
-                        if (pawnD.YCoordinate > 0 && pawnD.XCoordinate < 7 && IsAvailableNextPosition(pawnD.XCoordinate + 1, pawnD.YCoordinate - 1, pawnA, pawnB, pawnC, king))
+                        if (pawnD.YCoordinate > 0 && pawnD.XCoordinate < 7 &&
+                            IsAvailableNextPosition(pawnD.XCoordinate + 1, pawnD.YCoordinate - 1, king, pawnA, pawnB, pawnC))
                         {
                             pawnD.YCoordinate--;
                             pawnD.XCoordinate++;
@@ -301,11 +313,13 @@ namespace KingSurvival.Common
                             Console.ReadKey();
                             isValid = false;
                         }
+
                         break;
                     }
                 case "ddr":
                     {
-                        if (pawnD.YCoordinate < 7 && pawnD.XCoordinate < 7 && IsAvailableNextPosition(pawnD.XCoordinate + 1, pawnD.YCoordinate + 1, pawnA, pawnB, pawnC, king))
+                        if (pawnD.YCoordinate < 7 && pawnD.XCoordinate < 7 &&
+                            IsAvailableNextPosition(pawnD.XCoordinate + 1, pawnD.YCoordinate + 1, king, pawnA, pawnB, pawnC))
                         {
                             pawnD.YCoordinate++;
                             pawnD.XCoordinate++;
@@ -317,6 +331,7 @@ namespace KingSurvival.Common
                             Console.ReadKey();
                             isValid = false;
                         }
+
                         break;
                     }
                 default:
@@ -328,17 +343,19 @@ namespace KingSurvival.Common
 
                     return isValid;
             }
+
             return isValid;
         }
 
-        private static bool IsValidKingMove(string command, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, Pawn king)
+        private static bool IsValidKingMove(string command, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
-            bool isValid;
+            bool isValid = false;
             switch (command)
             {
                 case "kul":
                     {
-                        if (king.YCoordinate > 0 && king.XCoordinate > 0 && IsAvailableNextPosition(king.XCoordinate - 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
+                        if (king.YCoordinate > 0 && king.XCoordinate > 0 && 
+                            IsAvailableNextPosition(king.XCoordinate - 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
                         {
                             king.YCoordinate--;
                             king.XCoordinate--;
@@ -350,11 +367,13 @@ namespace KingSurvival.Common
                             Console.ReadKey();
                             isValid = false;
                         }
+
                         break;
                     }
                 case "kur":
                     {
-                        if (king.YCoordinate < 7 && king.XCoordinate > 0 && IsAvailableNextPosition(king.XCoordinate - 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
+                        if (king.YCoordinate < 7 && king.XCoordinate > 0 &&
+                            IsAvailableNextPosition(king.XCoordinate - 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
                         {
                             king.YCoordinate++;
                             king.XCoordinate--;
@@ -366,11 +385,13 @@ namespace KingSurvival.Common
                             Console.ReadKey();
                             isValid = false;
                         }
+
                         break;
                     }
                 case "kdl":
                     {
-                        if (king.YCoordinate > 0 && king.XCoordinate < 7 && IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
+                        if (king.YCoordinate > 0 && king.XCoordinate < 7 && 
+                            IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
                         {
                             king.YCoordinate--;
                             king.XCoordinate++;
@@ -382,11 +403,13 @@ namespace KingSurvival.Common
                             Console.ReadKey();
                             isValid = false;
                         }
+
                         break;
                     }
                 case "kdr":
                     {
-                        if (king.YCoordinate < 7 && king.XCoordinate < 7 && IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
+                        if (king.YCoordinate < 7 && king.XCoordinate < 7 && 
+                            IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
                         {
                             king.YCoordinate++;
                             king.XCoordinate++;
@@ -398,6 +421,7 @@ namespace KingSurvival.Common
                             Console.ReadKey();
                             isValid = false;
                         }
+
                         break;
                     }
                 default:
@@ -409,26 +433,28 @@ namespace KingSurvival.Common
 
                     return isValid;
             }
+
             return isValid;
         }
 
-        private static bool IsAvailableNextPosition(int isAvaliableXCoordinate, int isAvaliableYCoordinate, Pawn figureOne, Pawn figureTwo, Pawn figureThree, Pawn figureFour)
+        private static bool IsAvailableNextPosition(
+            int isAvaliableXCoordinate, int isAvaliableYCoordinate, Pawn pawnOne, Pawn pawnTwo, Pawn pawnThree, Pawn pawnFour)
         {
             bool isAvalable;
 
-            if (isAvaliableXCoordinate == figureOne.XCoordinate && isAvaliableYCoordinate == figureOne.YCoordinate)
+            if (isAvaliableXCoordinate == pawnOne.XCoordinate && isAvaliableYCoordinate == pawnOne.YCoordinate)
             {
                 isAvalable = false;
             }
-            else if (isAvaliableXCoordinate == figureTwo.XCoordinate && isAvaliableYCoordinate == figureTwo.YCoordinate)
+            else if (isAvaliableXCoordinate == pawnTwo.XCoordinate && isAvaliableYCoordinate == pawnTwo.YCoordinate)
             {
                 isAvalable = false;
             }
-            else if (isAvaliableXCoordinate == figureThree.XCoordinate && isAvaliableYCoordinate == figureThree.YCoordinate)
+            else if (isAvaliableXCoordinate == pawnThree.XCoordinate && isAvaliableYCoordinate == pawnThree.YCoordinate)
             {
                 isAvalable = false;
             }
-            else if (isAvaliableXCoordinate == figureFour.XCoordinate && isAvaliableYCoordinate == figureFour.YCoordinate)
+            else if (isAvaliableXCoordinate == pawnFour.XCoordinate && isAvaliableYCoordinate == pawnFour.YCoordinate)
             {
                 isAvalable = false;
             }
