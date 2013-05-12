@@ -2,7 +2,7 @@
 {
     using System.Text;
 
-    public class Board
+    internal class Board
     {
         private const char HorizontalBorderSymbol = '-';
         private const char VerticalBorderSymbol = '|';

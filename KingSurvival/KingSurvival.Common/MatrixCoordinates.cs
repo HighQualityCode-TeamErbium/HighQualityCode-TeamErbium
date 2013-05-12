@@ -1,6 +1,6 @@
 ﻿namespace KingSurvival.Common
 {
-    public struct MatrixCoordinates
+    internal struct MatrixCoordinates
     {
         private int row;
         private int column;

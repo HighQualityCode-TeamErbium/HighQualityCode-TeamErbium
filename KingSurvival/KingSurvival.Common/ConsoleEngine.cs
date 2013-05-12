@@ -18,7 +18,7 @@
             this.board = new Board(BoardRows, BoardColumns);
         }
 
-        public static bool HasGameEnded(int gameTurn, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private bool HasGameEnded(int gameTurn, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool isKingOnTurn = false;
             // on every odd game t king is on turn
@@ -44,7 +44,7 @@
             }
         }
 
-        public static bool HasKingWon(int gameTurn, bool gameCondition, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private bool HasKingWon(int gameTurn, bool gameCondition, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool isGameEnded = gameCondition;
             bool isKingOnTurn = (gameTurn % 2 == 1);
@@ -80,7 +80,7 @@
             }
         }
 
-        private static bool CanKingMove(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private bool CanKingMove(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             // determine king restrictions
             bool canKingGoUpLeft = IsKingUpLeftMovementAvailable(king, pawnA, pawnB, pawnC, pawnD);
@@ -93,7 +93,7 @@
             return isAnyOfKingMovesAvaiable;
         }
 
-        private static bool IsKingUpLeftMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private bool IsKingUpLeftMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool canKingGoUpLeft = true;
             // check if king is near border
@@ -107,7 +107,7 @@
             return canKingGoUpLeft;
         }
 
-        private static bool IsKingDownLeftMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private bool IsKingDownLeftMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool canKingGoDownLeft = true;
             // check if king is near border
@@ -121,7 +121,7 @@
             return canKingGoDownLeft;
         }
 
-        private static bool IsKingUpRightMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private bool IsKingUpRightMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool canKingGoUpRight = true;
             // check if king is near border
@@ -135,7 +135,7 @@
             return canKingGoUpRight;
         }
 
-        private static bool IsKingDownRightMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private bool IsKingDownRightMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool canKingGoDownRight = true;
             // check if king is near border
@@ -149,7 +149,7 @@
             return canKingGoDownRight;
         }
         // TODO : Immediately change name !!!
-        private static bool IsKingTrapped(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private bool IsKingTrapped(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             if (king.XCoordinate == BoardMaxRow)
             {
@@ -181,7 +181,7 @@
             return true;
         }
 
-        public static bool IsValidMove(int turn, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private bool IsValidMove(int turn, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool isValid;
             string command;
@@ -201,7 +201,7 @@
             return isValid;
         }
 
-        private static bool IsValidPawnMove(string command, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private bool IsValidPawnMove(string command, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool isValid;
             switch (command)
@@ -218,12 +218,13 @@
                         else
                         {
                             Console.Write("Invalid move!");
-                            Console.ReadKey();
+                            Console.Read();
                             isValid = false;
                         }
 
                         break;
                     }
+
                 case "adr":
                     {
                         if (pawnA.XCoordinate < BoardMaxRow && pawnA.YCoordinate < BoardMaxColumn &&
@@ -236,12 +237,13 @@
                         else
                         {
                             Console.Write("Invalid move!");
-                            Console.ReadKey();
+                            Console.Read();
                             isValid = false;
                         }
 
                         break;
                     }
+
                 case "bdl":
                     {
                         if (pawnB.XCoordinate < BoardMaxRow && pawnB.YCoordinate > 0 &&
@@ -254,11 +256,13 @@
                         else
                         {
                             Console.Write("Invalid move!");
-                            Console.ReadKey();
+                            Console.Read();
                             isValid = false;
                         }
+
                         break;
                     }
+
                 case "bdr":
                     {
                         if (pawnB.XCoordinate < BoardMaxRow && pawnB.YCoordinate < BoardMaxColumn &&
@@ -271,12 +275,13 @@
                         else
                         {
                             Console.Write("Invalid move!");
-                            Console.ReadKey();
+                            Console.Read();
                             isValid = false;
                         }
 
                         break;
                     }
+
                 case "cdl":
                     {
                         if (pawnC.XCoordinate < BoardMaxRow && pawnC.YCoordinate > 0 &&
@@ -289,11 +294,13 @@
                         else
                         {
                             Console.Write("Invalid move!");
-                            Console.ReadKey();
+                            Console.Read();
                             isValid = false;
                         }
+
                         break;
                     }
+
                 case "cdr":
                     {
                         if (pawnC.XCoordinate < BoardMaxRow && pawnC.YCoordinate < BoardMaxColumn &&
@@ -306,12 +313,13 @@
                         else
                         {
                             Console.Write("Invalid move!");
-                            Console.ReadKey();
+                            Console.Read();
                             isValid = false;
                         }
 
                         break;
                     }
+
                 case "ddl":
                     {
                         if (pawnD.XCoordinate < BoardMaxRow && pawnD.YCoordinate > 0 &&
@@ -324,12 +332,13 @@
                         else
                         {
                             Console.Write("Invalid move!");
-                            Console.ReadKey();
+                            Console.Read();
                             isValid = false;
                         }
 
                         break;
                     }
+
                 case "ddr":
                     {
                         if (pawnD.XCoordinate < BoardMaxRow && pawnD.YCoordinate < BoardMaxColumn &&
@@ -342,16 +351,17 @@
                         else
                         {
                             Console.Write("Invalid move!");
-                            Console.ReadKey();
+                            Console.Read();
                             isValid = false;
                         }
 
                         break;
                     }
+
                 default:
                     {
                         Console.Write("Invalid move!");
-                        Console.ReadKey();
+                        Console.Read();
                         isValid = false;
                     }
 
@@ -361,7 +371,7 @@
             return isValid;
         }
 
-        private static bool IsValidKingMove(string command, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private bool IsValidKingMove(string command, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool isValid = false;
             switch (command)
@@ -377,13 +387,14 @@
                         }
                         else
                         {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
+                            Console.Write("Invalid move!");
+                            Console.Read();
                             isValid = false;
                         }
 
                         break;
                     }
+
                 case "kur":
                     {
                         if (king.XCoordinate > 0 && king.YCoordinate < BoardMaxColumn &&
@@ -395,13 +406,14 @@
                         }
                         else
                         {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
+                            Console.Write("Invalid move!");
+                            Console.Read();
                             isValid = false;
                         }
 
                         break;
                     }
+
                 case "kdl":
                     {
                         if (king.XCoordinate < BoardMaxRow && king.YCoordinate > 0 && 
@@ -413,13 +425,14 @@
                         }
                         else
                         {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
+                            Console.Write("Invalid move!");
+                            Console.Read();
                             isValid = false;
                         }
 
                         break;
                     }
+
                 case "kdr":
                     {
                         if (king.XCoordinate < BoardMaxRow && king.YCoordinate < BoardMaxColumn && 
@@ -431,17 +444,18 @@
                         }
                         else
                         {
-                            Console.Write("Illegal move!");
-                            Console.ReadKey();
+                            Console.Write("Invalid move!");
+                            Console.Read();
                             isValid = false;
                         }
 
                         break;
                     }
+
                 default:
                     {
-                        Console.Write("Illegal move!");
-                        Console.ReadKey();
+                        Console.Write("Invalid move!");
+                        Console.Read();
                         isValid = false;
                     }
 
@@ -451,7 +465,7 @@
             return isValid;
         }
 
-        private static bool IsAvailableNextPosition(
+        private bool IsAvailableNextPosition(
             int isAvaliableXCoordinate, int isAvaliableYCoordinate, Pawn pawnOne, Pawn pawnTwo, Pawn pawnThree, Pawn pawnFour)
         {
             bool isAvalable;
@@ -486,13 +500,13 @@
             {
                 Console.Clear();
                 Console.WriteLine(this.board.GetImage(king, pawnA, pawnB, pawnC, pawnD));
-                Console.WriteLine("King wins in {0} turns.", turn / 2);
+                Console.WriteLine("King wins in {0} turns!", turn / 2);
             }
             else
             {
                 Console.Clear();
                 this.board.GetImage(pawnA, pawnB, pawnC, pawnD, king);
-                Console.WriteLine("King loses.");
+                Console.WriteLine("King loses in {0} turns...", turn / 2);
             }
         }
 
@@ -514,12 +528,14 @@
                     Console.Clear();
                     Console.WriteLine(this.board.GetImage(king, pawnA, pawnB, pawnC, pawnD));
                     isValidMove = IsValidMove(currentMove, king, pawnA, pawnB, pawnC, pawnD);
-                } while (!isValidMove);
+                } 
+                while (!isValidMove);
 
                 endOfGame = HasGameEnded(currentMove, king, pawnA, pawnB, pawnC, pawnD);
                 isKingWinner = HasKingWon(currentMove, endOfGame, king, pawnA, pawnB, pawnC, pawnD);
                 currentMove++;
-            } while (!endOfGame);
+            } 
+            while (!endOfGame);
 
             if (endOfGame)
             {

@@ -1,6 +1,6 @@
 ﻿namespace KingSurvival.Common
 {
-    public class Pawn
+    internal class Pawn
     {
         private readonly char symbol;
         private MatrixCoordinates coordinates;
