@@ -35,43 +35,43 @@
         {
             this.image.Clear();
 
-            this.AppendRowsLine(this.image);
+            this.AppendRowsLine();
 
-            this.AppendBorder(this.image);
+            this.AppendBorder();
 
-            this.AppendBoard(this.image, pawns);
+            this.AppendRowAndColumnIndicators(pawns);
 
-            this.AppendBorder(this.image);
+            this.AppendBorder();
 
             return this.image.ToString();
         }
 
-        private void AppendRowsLine(StringBuilder image)
+        private void AppendRowsLine()
         {
             // Append white space in the beginning
-            image.Append(new string(WhiteSpaceSymbol, 4));
+            this.image.Append(new string(WhiteSpaceSymbol, 4));
 
             for (int row = 0; row < this.BoardRows; row++)
             {
-                image.AppendFormat("{0} ", row);
+                this.image.AppendFormat("{0} ", row);
             }
 
-            image.AppendLine();
+            this.image.AppendLine();
         }
 
-        private void AppendBoard(StringBuilder image, params Pawn[] pawns)
+        private void AppendRowAndColumnIndicators(params Pawn[] pawns)
         {
             for (int row = 0; row < this.BoardRows; row++)
             {
-                image.AppendFormat("{0} {1} ", row, VerticalBorderSymbol);
+                this.image.AppendFormat("{0} {1} ", row, VerticalBorderSymbol);
 
                 for (int col = 0; col < this.BoardColumns; col++)
                 {
                     char symbol = this.GetSymbol(row, col, pawns);
-                    image.AppendFormat("{0} ", symbol);
+                    this.image.AppendFormat("{0} ", symbol);
                 }
 
-                image.AppendLine(VerticalBorderSymbol.ToString());
+                this.image.AppendLine(VerticalBorderSymbol.ToString());
             }
         }
 
@@ -105,13 +105,13 @@
             return symbol;
         }
 
-        private void AppendBorder(StringBuilder image)
+        private void AppendBorder()
         {
             // Append white space in the beginning
-            image.Append(new string(WhiteSpaceSymbol, 3));
+            this.image.Append(new string(WhiteSpaceSymbol, 3));
 
             // Append border of '-' symbols
-            image.AppendLine(new string(HorizontalBorderSymbol, (2 * this.BoardRows) + 1));
+            this.image.AppendLine(new string(HorizontalBorderSymbol, (2 * this.BoardRows) + 1));
         }
     }
 }
