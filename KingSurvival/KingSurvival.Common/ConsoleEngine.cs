@@ -10,8 +10,6 @@
 
         private static readonly int BoardMaxRow = BoardRows - 1;
         private static readonly int BoardMaxColumn = BoardColumns - 1;
-        private static readonly int BoardMinRow = BoardRows - BoardRows;
-        private static readonly int BoardMinColumn = BoardMaxColumn - BoardColumns;
 
         private readonly Board board;
 
@@ -34,8 +32,8 @@
             {
                 // king is trapped by pawns -> game ends, king loses
                 if (!CanKingMove(king, pawnA, pawnB, pawnC, pawnD) ||
-                    (IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD) && IsKingTrapped(king, pawnB, pawnA, pawnC, pawnD) &&
-                    IsKingTrapped(king, pawnC, pawnA, pawnB, pawnD) && IsKingTrapped(king, pawnD, pawnB, pawnC, pawnD)))
+                    (IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD) && IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD) &&
+                    IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD) && IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD)))
                 {
                     return true;
                 }
@@ -54,7 +52,7 @@
             if (isGameEnded)
             {
                 // if king is on top is winner
-                if (isKingOnTurn && king.XCoordinate == BoardMinRow)
+                if (isKingOnTurn && king.XCoordinate == BoardMaxRow)
                 {
                     return true;
                 }
@@ -150,8 +148,8 @@
 
             return canKingGoDownRight;
         }
-
-        private static bool IsKingTrapped(King king, Pawn pawnOne, Pawn pawnTwo, Pawn pawnThree, Pawn pawnFour)
+        // TODO : Immediately change name !!!
+        private static bool IsKingTrapped(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             if (king.XCoordinate == BoardMaxRow)
             {
@@ -159,22 +157,22 @@
             }
             else if (king.YCoordinate > 0 && king.YCoordinate < BoardMaxColumn)
             {
-                if (IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnOne, pawnTwo, pawnThree, pawnFour) &&
-                    IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnOne, pawnTwo, pawnThree, pawnFour))
+                if (IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD) &&
+                    IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     return false;
                 }
             }
             else if (king.YCoordinate == 0)
             {
-                if (IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnOne, pawnTwo, pawnThree, pawnFour))
+                if (IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     return false;
                 }
             }
             else if (king.YCoordinate == BoardMaxColumn)
             {
-                if (IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnOne, pawnTwo, pawnThree, pawnFour))
+                if (IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
                 {
                     return false;
                 }
