@@ -1,6 +1,6 @@
 ﻿namespace KingSurvival.Common
 {
-    internal class King : Pawn
+    public class King : Pawn
     {
         private const char KingSymbol = 'K';
 
