@@ -10,6 +10,8 @@
 
         private static readonly int BoardMaxRow = BoardRows - 1;
         private static readonly int BoardMaxColumn = BoardColumns - 1;
+        private static readonly int BoardMinRow = BoardRows - BoardRows;
+        private static readonly int BoardMinColumn = BoardMaxColumn - BoardColumns;
 
         private readonly Board board;
 
@@ -21,19 +23,17 @@
         private bool HasGameEnded(int gameTurn, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
             bool isKingOnTurn = false;
-            // on every odd game t king is on turn
+            
             isKingOnTurn = (gameTurn % 2 == 1);
-            // if king is not on top of board game continues
+           
             if (isKingOnTurn && king.XCoordinate == 0)
             {
                 return true;
             }
             else
             {
-                // king is trapped by pawns -> game ends, king loses
                 if (!CanKingMove(king, pawnA, pawnB, pawnC, pawnD) ||
-                    (IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD) && IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD) &&
-                    IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD) && IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD)))
+                    !CanAtLeastOnePawnMove(pawnA, pawnB, pawnC, pawnD, king))
                 {
                     return true;
                 }
@@ -48,23 +48,20 @@
         {
             bool isGameEnded = gameCondition;
             bool isKingOnTurn = (gameTurn % 2 == 1);
-            // we can only determine king as winner, after game ending
+            
             if (isGameEnded)
             {
-                // if king is on top is winner
                 if (isKingOnTurn && king.XCoordinate == BoardMaxRow)
                 {
                     return true;
                 }
                 else
                 {
-                    // if king is trapped -> lost
                     if (!CanKingMove(king, pawnA, pawnB, pawnC, pawnD))
                     {
                         return false;
-                    } // while king is not on top and not trapped
-                    else if (IsKingTrapped(king, pawnA, pawnB, pawnC, pawnD) && IsKingTrapped(king, pawnB, pawnA, pawnC, pawnD) &&
-                    IsKingTrapped(king, pawnC, pawnA, pawnB, pawnD) && IsKingTrapped(king, pawnD, pawnA, pawnB, pawnC))
+                    }
+                    else if (!CanAtLeastOnePawnMove(pawnA, pawnB, pawnC, pawnD, king))
                     {
                         return true;
                     }
@@ -148,31 +145,42 @@
 
             return canKingGoDownRight;
         }
-        // TODO : Immediately change name !!!
-        private bool IsKingTrapped(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        private bool CanAtLeastOnePawnMove(Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, King king)
         {
-            if (king.XCoordinate == BoardMaxRow)
+            bool canPawnAMove = CanCurrentPawnMove(pawnA, pawnB, pawnC, pawnD, king);
+            bool canPawnBMove = CanCurrentPawnMove(pawnB, pawnA, pawnC, pawnD, king);
+            bool canPawnCMove = CanCurrentPawnMove(pawnC, pawnA, pawnB, pawnD, king);
+            bool canPawnDMove = CanCurrentPawnMove(pawnD, pawnA, pawnB, pawnC, king);
+
+            bool CanAtLeastOnePawnMove = canPawnAMove || canPawnBMove || canPawnCMove || canPawnDMove;
+
+            return CanAtLeastOnePawnMove;
+        }
+
+        private bool CanCurrentPawnMove(Pawn currentPawn, Pawn obstacleOne, Pawn obstacleTwo, Pawn obstacleThree, Pawn obstacleFour)
+        {
+            if (currentPawn.YCoordinate == BoardMaxRow)
             {
                 return false;
             }
-            else if (king.YCoordinate > 0 && king.YCoordinate < BoardMaxColumn)
+            else if (currentPawn.XCoordinate > BoardMinColumn && currentPawn.XCoordinate < BoardMaxColumn)
             {
-                if (IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD) &&
-                    IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
+                if (!IsAvailableNextPosition(currentPawn.XCoordinate + 1, currentPawn.YCoordinate + 1, obstacleOne, obstacleTwo, obstacleThree, obstacleFour) &&
+                    !IsAvailableNextPosition(currentPawn.XCoordinate + 1, currentPawn.YCoordinate - 1, obstacleOne, obstacleTwo, obstacleThree, obstacleFour))
                 {
                     return false;
                 }
             }
-            else if (king.YCoordinate == 0)
+            else if (currentPawn.XCoordinate == 0)
             {
-                if (IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
+                if (!IsAvailableNextPosition(currentPawn.XCoordinate + 1, currentPawn.YCoordinate + 1, obstacleOne, obstacleTwo, obstacleThree, obstacleFour))
                 {
                     return false;
                 }
             }
-            else if (king.YCoordinate == BoardMaxColumn)
+            else if (currentPawn.XCoordinate == BoardMaxColumn)
             {
-                if (IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
+                if (!IsAvailableNextPosition(currentPawn.XCoordinate + 1, currentPawn.YCoordinate - 1, obstacleOne, obstacleTwo, obstacleThree, obstacleFour))
                 {
                     return false;
                 }
