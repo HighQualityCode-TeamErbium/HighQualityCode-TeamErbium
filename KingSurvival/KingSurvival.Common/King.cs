@@ -4,8 +4,8 @@
     {
         private const char KingSymbol = 'K';
 
-        public King(int xCoordinate, int yCoordinate)
-            : base(KingSymbol, xCoordinate, yCoordinate)
+        public King(MatrixCoordinates coordinates)
+            : base(KingSymbol, coordinates)
         {
         }
     }

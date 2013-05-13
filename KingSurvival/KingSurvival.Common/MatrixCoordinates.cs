@@ -23,5 +23,49 @@
             get { return this.column; }
             set { this.column = value; }
         }
+
+        public static bool operator ==(MatrixCoordinates first, MatrixCoordinates second)
+        {
+            return MatrixCoordinates.Equals(first, second);
+        }
+
+        public static bool operator !=(MatrixCoordinates first, MatrixCoordinates second)
+        {
+            return !MatrixCoordinates.Equals(first, second);
+        }
+
+        public static MatrixCoordinates operator +(MatrixCoordinates first, MatrixCoordinates second)
+        {
+            int newRow = first.Row + second.Row;
+            int newColumn = first.Column + second.Column;
+
+            MatrixCoordinates newCoordinates = new MatrixCoordinates(newRow, newColumn);
+            return newCoordinates;
+        }
+
+        public static MatrixCoordinates operator -(MatrixCoordinates first, MatrixCoordinates second)
+        {
+            int newRow = first.Row - second.Row;
+            int newColumn = first.Column - second.Column;
+
+            MatrixCoordinates newCoordinates = new MatrixCoordinates(newRow, newColumn);
+            return newCoordinates;
+        }
+
+        public override bool Equals(object other)
+        {
+            MatrixCoordinates otherCoordinates = other as MatrixCoordinates;
+            if (otherCoordinates == null)
+            {
+                return false;
+            }
+
+            return this.Row == otherCoordinates.Row && this.Column == otherCoordinates.Column;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Row ^ this.Column;
+        }
     }
 }

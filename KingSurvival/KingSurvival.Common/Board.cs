@@ -82,7 +82,7 @@
 
             for (int i = 0; i < pawns.Length; i++)
             {
-                if (pawns[i].XCoordinate == column && pawns[i].YCoordinate == row)
+                if (pawns[i].Coordinates.Row == row && pawns[i].Coordinates.Column == column)
                 {
                     isPawnSymbol = true;
                     symbol = pawns[i].Symbol;

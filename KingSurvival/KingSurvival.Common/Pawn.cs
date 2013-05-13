@@ -5,10 +5,10 @@
         private readonly char symbol;
         private MatrixCoordinates coordinates;
 
-        public Pawn(char symbol, int xCoordinate, int yCoordinate)
+        public Pawn(char symbol, MatrixCoordinates coordinates)
         {
             this.symbol = symbol;
-            this.coordinates = new MatrixCoordinates(xCoordinate, yCoordinate); 
+            this.coordinates = coordinates;
         }
 
         public char Symbol
@@ -16,16 +16,10 @@
             get { return this.symbol; }
         }
 
-        public int XCoordinate
+        public MatrixCoordinates Coordinates
         {
-            get { return this.coordinates.Row; }
-            set { this.coordinates.Row = value; }
-        }
-
-        public int YCoordinate
-        {
-            get { return this.coordinates.Column; }
-            set { this.coordinates.Column = value; }
+            get { return this.coordinates; }
+            set { this.coordinates = value; }
         }
     }
 }
