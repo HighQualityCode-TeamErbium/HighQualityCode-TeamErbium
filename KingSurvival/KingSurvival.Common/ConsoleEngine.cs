@@ -4,6 +4,16 @@
 
     public class ConsoleEngine : IEngine
     {
+        private const int KingInitialRow = 7;
+        private const int KingInitialColumn = 0;
+        private const int PawnAInitialRow = 0;
+        private const int PawnAInitialColumn = 0;
+        private const int PawnBInitialRow = 0;
+        private const int PawnBInitialColumn = 2;
+        private const int PawnCInitialRow = 0;
+        private const int PawnCInitialColumn = 4;
+        private const int PawnDInitialRow = 0;
+        private const int PawnDInitialColumn = 6;        
         private const int BoardRows = 8;
         private const int BoardColumns = 8;
         private bool isKingWinner = false;
@@ -520,12 +530,21 @@
 
         public void Run()
         {
-            Pawn pawnA = new Pawn('A', 0, 0);
-            Pawn pawnB = new Pawn('B', 2, 0);
-            Pawn pawnC = new Pawn('C', 4, 0);
-            Pawn pawnD = new Pawn('D', 6, 0);
-            King king = new King(3, 7);
+            MatrixCoordinates kingCoordinates = new MatrixCoordinates(KingInitialRow, KingInitialColumn);
+            King king = new King(kingCoordinates);
 
+            MatrixCoordinates pawnACoordinates = new MatrixCoordinates(PawnAInitialRow, PawnAInitialColumn);
+            Pawn pawnA = new Pawn('A', pawnACoordinates);
+
+            MatrixCoordinates pawnBCoordinates = new MatrixCoordinates(PawnBInitialRow, PawnBInitialColumn);
+            Pawn pawnB = new Pawn('B', pawnBCoordinates);
+
+            MatrixCoordinates pawnCCoordinates = new MatrixCoordinates(PawnCInitialRow, PawnCInitialColumn);
+            Pawn pawnC = new Pawn('C', pawnCCoordinates);
+
+            MatrixCoordinates pawnDCoordinates = new MatrixCoordinates(PawnDInitialRow, PawnDInitialColumn);
+            Pawn pawnD = new Pawn('D', pawnDCoordinates);
+            
             bool endOfGame = false;
             int currentMove = 1;
             do
