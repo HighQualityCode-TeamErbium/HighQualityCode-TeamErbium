@@ -513,10 +513,10 @@
         public void Run()
         {
             Pawn pawnA = new Pawn('A', 0, 0);
-            Pawn pawnB = new Pawn('B', 0, 2);
-            Pawn pawnC = new Pawn('C', 0, 4);
-            Pawn pawnD = new Pawn('D', 0, 6);
-            King king = new King(7, 3);
+            Pawn pawnB = new Pawn('B', 2, 0);
+            Pawn pawnC = new Pawn('C', 4, 0);
+            Pawn pawnD = new Pawn('D', 6, 0);
+            King king = new King(3, 7);
 
             bool endOfGame = false;
             int currentMove = 1;
