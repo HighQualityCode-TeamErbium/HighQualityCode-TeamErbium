@@ -483,33 +483,17 @@
             return isValid;
         }
 
-        private bool IsAvailableNextPosition(
-            int isAvaliableXCoordinate, int isAvaliableYCoordinate, Pawn pawnOne, Pawn pawnTwo, Pawn pawnThree, Pawn pawnFour)
+        private bool IsAvailableNextPosition(MatrixCoordinates newCoordinates, MatrixCoordinates[] pawnsCoordinates)
         {
-            bool isAvalable;
-
-            if (isAvaliableXCoordinate == pawnOne.XCoordinate && isAvaliableYCoordinate == pawnOne.YCoordinate)
+            foreach (MatrixCoordinates coordinates in pawnsCoordinates)
             {
-                isAvalable = false;
-            }
-            else if (isAvaliableXCoordinate == pawnTwo.XCoordinate && isAvaliableYCoordinate == pawnTwo.YCoordinate)
-            {
-                isAvalable = false;
-            }
-            else if (isAvaliableXCoordinate == pawnThree.XCoordinate && isAvaliableYCoordinate == pawnThree.YCoordinate)
-            {
-                isAvalable = false;
-            }
-            else if (isAvaliableXCoordinate == pawnFour.XCoordinate && isAvaliableYCoordinate == pawnFour.YCoordinate)
-            {
-                isAvalable = false;
-            }
-            else
-            {
-                isAvalable = true;
+                if (newCoordinates == coordinates)
+                {
+                    return false;
+                }
             }
 
-            return isAvalable;
+            return true;
         }
 
         private void DisplayCurrentEndOnConsole(int turn, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
