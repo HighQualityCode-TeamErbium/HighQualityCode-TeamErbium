@@ -54,12 +54,12 @@
 
         public override bool Equals(object other)
         {
-            MatrixCoordinates otherCoordinates = other as MatrixCoordinates;
-            if (otherCoordinates == null)
+            if (!(other is MatrixCoordinates))
             {
                 return false;
             }
 
+            MatrixCoordinates otherCoordinates = (MatrixCoordinates)other;
             return this.Row == otherCoordinates.Row && this.Column == otherCoordinates.Column;
         }
 

@@ -5,7 +5,7 @@
     public class ConsoleEngine : IEngine
     {
         private const int KingInitialRow = 7;
-        private const int KingInitialColumn = 0;
+        private const int KingInitialColumn = 3;
         private const int PawnAInitialRow = 0;
         private const int PawnAInitialColumn = 0;
         private const int PawnBInitialRow = 0;
@@ -20,9 +20,11 @@
 
         private static readonly int BoardMaxRow = BoardRows - 1;
         private static readonly int BoardMaxColumn = BoardColumns - 1;
-        private static readonly int BoardMinRow = BoardRows - BoardRows;
-        private static readonly int BoardMinColumn = BoardMaxColumn - BoardColumns;
-
+        private static readonly MatrixCoordinates UpLeftDirection = new MatrixCoordinates(-1, -1);
+        private static readonly MatrixCoordinates UpRightDirection = new MatrixCoordinates(-1, 1);
+        private static readonly MatrixCoordinates DownLeftDirection = new MatrixCoordinates(1, -1);
+        private static readonly MatrixCoordinates DownRightDirection = new MatrixCoordinates(1, 1);
+        
         private readonly Board board;
 
         public ConsoleEngine()
@@ -36,14 +38,14 @@
             
             isKingOnTurn = (gameTurn % 2 == 1);
            
-            if (isKingOnTurn && king.XCoordinate == 0)
+            if (isKingOnTurn && king.Coordinates.Row == 0)
             {
                 return true;
             }
             else
             {
                 if (!CanKingMove(king, pawnA, pawnB, pawnC, pawnD) ||
-                    !CanAtLeastOnePawnMove(pawnA, pawnB, pawnC, pawnD, king))
+                    !CanAtLeastOnePawnMove(king, pawnA, pawnB, pawnC, pawnD))
                 {
                     return true;
                 }
@@ -61,7 +63,7 @@
             
             if (isGameEnded)
             {
-                if (isKingOnTurn && king.XCoordinate == BoardMaxRow)
+                if (isKingOnTurn && king.Coordinates.Row == BoardMaxRow)
                 {
                     return true;
                 }
@@ -71,7 +73,7 @@
                     {
                         return false;
                     }
-                    else if (!CanAtLeastOnePawnMove(pawnA, pawnB, pawnC, pawnD, king))
+                    else if (!CanAtLeastOnePawnMove(king, pawnA, pawnB, pawnC, pawnD))
                     {
                         return true;
                     }
@@ -102,95 +104,108 @@
 
         private bool IsKingUpLeftMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
-            bool canKingGoUpLeft = true;
             // check if king is near border
-            if (king.XCoordinate == 0 || king.YCoordinate == 0)
+            if (king.Coordinates.Row == 0 || king.Coordinates.Column == 0)
             {
-                canKingGoUpLeft = false;
+                return false;
             }
             // check if pawn is near king
-            canKingGoUpLeft = IsAvailableNextPosition(king.XCoordinate - 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD);
-
+            MatrixCoordinates newKingCoordinates = king.Coordinates + UpLeftDirection;
+            bool canKingGoUpLeft = 
+                IsAvailableNextPosition(newKingCoordinates, pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
             return canKingGoUpLeft;
         }
 
         private bool IsKingDownLeftMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
-            bool canKingGoDownLeft = true;
             // check if king is near border
-            if (king.XCoordinate == BoardMaxRow || king.YCoordinate == 0)
+            if (king.Coordinates.Row == BoardMaxRow || king.Coordinates.Column == 0)
             {
-                canKingGoDownLeft = false;
+                return false;
             }
             // check if pawn is near king
-            canKingGoDownLeft = IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD);
-
+            MatrixCoordinates newKingCoordinates = king.Coordinates + DownLeftDirection;
+            bool canKingGoDownLeft = 
+                IsAvailableNextPosition(newKingCoordinates, pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
             return canKingGoDownLeft;
         }
 
         private bool IsKingUpRightMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
-            bool canKingGoUpRight = true;
             // check if king is near border
-            if (king.XCoordinate == 0 || king.YCoordinate == BoardMaxColumn)
+            if (king.Coordinates.Row == 0 || king.Coordinates.Column == BoardMaxColumn)
             {
-                canKingGoUpRight = false;
+                return false;
             }
             // check if pawn is near king
-            canKingGoUpRight = IsAvailableNextPosition(king.XCoordinate - 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD);
-
+            MatrixCoordinates newKingCoordinates = king.Coordinates + UpRightDirection;
+            bool canKingGoUpRight =
+                IsAvailableNextPosition(newKingCoordinates, pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
             return canKingGoUpRight;
         }
 
         private bool IsKingDownRightMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
-            bool canKingGoDownRight = true;
             // check if king is near border
-            if (king.XCoordinate == BoardMaxRow || king.YCoordinate == BoardMaxColumn)
-            {
-                canKingGoDownRight = false;
-            }
-            // check if pawn is near king
-            canKingGoDownRight = IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD);
-
-            return canKingGoDownRight;
-        }
-        private bool CanAtLeastOnePawnMove(Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD, King king)
-        {
-            bool canPawnAMove = CanCurrentPawnMove(pawnA, pawnB, pawnC, pawnD, king);
-            bool canPawnBMove = CanCurrentPawnMove(pawnB, pawnA, pawnC, pawnD, king);
-            bool canPawnCMove = CanCurrentPawnMove(pawnC, pawnA, pawnB, pawnD, king);
-            bool canPawnDMove = CanCurrentPawnMove(pawnD, pawnA, pawnB, pawnC, king);
-
-            bool CanAtLeastOnePawnMove = canPawnAMove || canPawnBMove || canPawnCMove || canPawnDMove;
-
-            return CanAtLeastOnePawnMove;
-        }
-
-        private bool CanCurrentPawnMove(Pawn currentPawn, Pawn obstacleOne, Pawn obstacleTwo, Pawn obstacleThree, Pawn obstacleFour)
-        {
-            if (currentPawn.YCoordinate == BoardMaxRow)
+            if (king.Coordinates.Row == BoardMaxRow || king.Coordinates.Column == BoardMaxColumn)
             {
                 return false;
             }
-            else if (currentPawn.XCoordinate > BoardMinColumn && currentPawn.XCoordinate < BoardMaxColumn)
+            // check if pawn is near king
+            MatrixCoordinates newKingCoordinates = king.Coordinates + DownRightDirection;
+            bool canKingGoDownRight =
+                IsAvailableNextPosition(newKingCoordinates, pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
+
+            return canKingGoDownRight;
+        }
+
+        private bool CanAtLeastOnePawnMove(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
+        {
+            bool canPawnAMove = 
+                CanCurrentPawnMove(pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates, pawnD.Coordinates, king.Coordinates);
+            bool canPawnBMove =
+                CanCurrentPawnMove(pawnB.Coordinates, pawnA.Coordinates, pawnC.Coordinates, pawnD.Coordinates, king.Coordinates);
+            bool canPawnCMove = 
+                CanCurrentPawnMove(pawnC.Coordinates, pawnA.Coordinates, pawnB.Coordinates, pawnD.Coordinates, king.Coordinates);
+            bool canPawnDMove = 
+                CanCurrentPawnMove(pawnD.Coordinates, pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates, king.Coordinates);
+
+            bool canAtLeastOnePawnMove = canPawnAMove || canPawnBMove || canPawnCMove || canPawnDMove;
+
+            return canAtLeastOnePawnMove;
+        }
+
+        private bool CanCurrentPawnMove(MatrixCoordinates currentPawnCoordinates, params MatrixCoordinates[] obstaclesCoordinates)
+        {
+            if (currentPawnCoordinates.Row == BoardMaxRow)
             {
-                if (!IsAvailableNextPosition(currentPawn.XCoordinate + 1, currentPawn.YCoordinate + 1, obstacleOne, obstacleTwo, obstacleThree, obstacleFour) &&
-                    !IsAvailableNextPosition(currentPawn.XCoordinate + 1, currentPawn.YCoordinate - 1, obstacleOne, obstacleTwo, obstacleThree, obstacleFour))
+                return false;
+            }
+            else if (currentPawnCoordinates.Column > 0 && currentPawnCoordinates.Column < BoardMaxColumn)
+            {
+                MatrixCoordinates newCoordinatesDownRight = currentPawnCoordinates + DownRightDirection;
+                MatrixCoordinates newCoordinatesDownLeft = currentPawnCoordinates + DownLeftDirection;
+
+                if (!IsAvailableNextPosition(newCoordinatesDownRight, obstaclesCoordinates) &&
+                    !IsAvailableNextPosition(newCoordinatesDownLeft, obstaclesCoordinates))
                 {
                     return false;
                 }
             }
-            else if (currentPawn.XCoordinate == 0)
+            else if (currentPawnCoordinates.Row == 0)
             {
-                if (!IsAvailableNextPosition(currentPawn.XCoordinate + 1, currentPawn.YCoordinate + 1, obstacleOne, obstacleTwo, obstacleThree, obstacleFour))
+                MatrixCoordinates newCoordinates = currentPawnCoordinates + DownRightDirection;
+
+                if (!IsAvailableNextPosition(newCoordinates, obstaclesCoordinates))
                 {
                     return false;
                 }
             }
-            else if (currentPawn.XCoordinate == BoardMaxColumn)
+            else if (currentPawnCoordinates.Column == BoardMaxColumn)
             {
-                if (!IsAvailableNextPosition(currentPawn.XCoordinate + 1, currentPawn.YCoordinate - 1, obstacleOne, obstacleTwo, obstacleThree, obstacleFour))
+                MatrixCoordinates newCoordinates = currentPawnCoordinates + DownLeftDirection;
+                
+                if (!IsAvailableNextPosition(newCoordinates, obstaclesCoordinates))
                 {
                     return false;
                 }
@@ -205,13 +220,13 @@
             string command;
             if (turn % 2 == 1)
             {
-                Console.Write("King’s turn: ");
+                Console.Write("King's turn: ");
                 command = Console.ReadLine().ToLower();
                 isValid = IsValidKingMove(command, king, pawnA, pawnB, pawnC, pawnD);
             }
             else
             {
-                Console.Write("Pawns’ turn: ");
+                Console.Write("Pawn's turn: ");
                 command = Console.ReadLine().ToLower();
                 isValid = IsValidPawnMove(command, king, pawnA, pawnB, pawnC, pawnD);
             }
@@ -219,271 +234,129 @@
             return isValid;
         }
 
+        private bool HandleDownLeftPawnMove(Pawn pawn, params MatrixCoordinates[] otherPawnsCoordinates)
+        {
+            MatrixCoordinates newCoordinates = pawn.Coordinates + DownLeftDirection;
+
+            if (pawn.Coordinates.Row < BoardMaxRow && pawn.Coordinates.Column > 0 &&
+                IsAvailableNextPosition(newCoordinates, otherPawnsCoordinates))
+            {
+                pawn.Coordinates = newCoordinates;
+                return true;
+            }
+            else
+            {
+                Console.Write("Invalid move!");
+                Console.ReadKey();
+                return false;
+            }
+        }
+
+        private bool HandleDownRightPawnMove(Pawn pawn, params MatrixCoordinates[] otherPawnsCoordinates)
+        {
+            MatrixCoordinates newCoordinates = pawn.Coordinates + DownRightDirection;
+
+            if (pawn.Coordinates.Row < BoardMaxRow && pawn.Coordinates.Column < BoardMaxColumn && 
+                IsAvailableNextPosition(newCoordinates, otherPawnsCoordinates))
+            {
+                pawn.Coordinates = newCoordinates;
+                return true;
+            }
+            else
+            {
+                Console.Write("Invalid move!");
+                Console.ReadKey();
+                return false;
+            }
+        }
+
         private bool IsValidPawnMove(string command, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
-            bool isValid;
             switch (command)
             {
                 case "adl":
-                    {
-                        if (pawnA.XCoordinate < BoardMaxRow && pawnA.YCoordinate > 0 &&
-                            IsAvailableNextPosition(pawnA.XCoordinate + 1, pawnA.YCoordinate - 1, king, pawnB, pawnC, pawnD))
-                        {
-                            pawnA.XCoordinate++;
-                            pawnA.YCoordinate--;
-                            isValid = true;
-                        }
-                        else
-                        {
-                            Console.Write("Invalid move!");
-                            Console.Read();
-                            isValid = false;
-                        }
-
-                        break;
-                    }
-
+                    return HandleDownLeftPawnMove(pawnA, king.Coordinates, pawnB.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
                 case "adr":
-                    {
-                        if (pawnA.XCoordinate < BoardMaxRow && pawnA.YCoordinate < BoardMaxColumn &&
-                            IsAvailableNextPosition(pawnA.XCoordinate + 1, pawnA.YCoordinate + 1, king, pawnB, pawnC, pawnD))
-                        {
-                            pawnA.XCoordinate++;
-                            pawnA.YCoordinate++;
-                            isValid = true;
-                        }
-                        else
-                        {
-                            Console.Write("Invalid move!");
-                            Console.Read();
-                            isValid = false;
-                        }
-
-                        break;
-                    }
-
+                    return HandleDownRightPawnMove(pawnA, king.Coordinates, pawnB.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
                 case "bdl":
-                    {
-                        if (pawnB.XCoordinate < BoardMaxRow && pawnB.YCoordinate > 0 &&
-                            IsAvailableNextPosition(pawnB.XCoordinate + 1, pawnB.YCoordinate - 1, king, pawnA, pawnC, pawnD))
-                        {
-                            pawnB.XCoordinate++;
-                            pawnB.YCoordinate--;
-                            isValid = true;
-                        }
-                        else
-                        {
-                            Console.Write("Invalid move!");
-                            Console.Read();
-                            isValid = false;
-                        }
-
-                        break;
-                    }
-
+                    return HandleDownLeftPawnMove(pawnB, king.Coordinates, pawnA.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
                 case "bdr":
-                    {
-                        if (pawnB.XCoordinate < BoardMaxRow && pawnB.YCoordinate < BoardMaxColumn &&
-                            IsAvailableNextPosition(pawnB.XCoordinate + 1, pawnB.YCoordinate + 1, king, pawnA, pawnC, pawnD))
-                        {
-                            pawnB.XCoordinate++;
-                            pawnB.YCoordinate++;
-                            isValid = true;
-                        }
-                        else
-                        {
-                            Console.Write("Invalid move!");
-                            Console.Read();
-                            isValid = false;
-                        }
-
-                        break;
-                    }
-
+                    return HandleDownRightPawnMove(pawnB, king.Coordinates, pawnA.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
                 case "cdl":
-                    {
-                        if (pawnC.XCoordinate < BoardMaxRow && pawnC.YCoordinate > 0 &&
-                            IsAvailableNextPosition(pawnC.XCoordinate + 1, pawnC.YCoordinate + 1, king, pawnA, pawnB, pawnD))
-                        {
-                            pawnC.XCoordinate++;
-                            pawnC.YCoordinate--;
-                            isValid = true;
-                        }
-                        else
-                        {
-                            Console.Write("Invalid move!");
-                            Console.Read();
-                            isValid = false;
-                        }
-
-                        break;
-                    }
-
+                    return HandleDownLeftPawnMove(pawnC, king.Coordinates, pawnA.Coordinates, pawnB.Coordinates, pawnD.Coordinates);
                 case "cdr":
-                    {
-                        if (pawnC.XCoordinate < BoardMaxRow && pawnC.YCoordinate < BoardMaxColumn &&
-                            IsAvailableNextPosition(pawnC.XCoordinate + 1, pawnC.YCoordinate + 1, king, pawnA, pawnB, pawnD))
-                        {
-                            pawnC.XCoordinate++;
-                            pawnC.YCoordinate++;
-                            isValid = true;
-                        }
-                        else
-                        {
-                            Console.Write("Invalid move!");
-                            Console.Read();
-                            isValid = false;
-                        }
-
-                        break;
-                    }
-
+                    return HandleDownRightPawnMove(pawnC, king.Coordinates, pawnA.Coordinates, pawnB.Coordinates, pawnD.Coordinates);
                 case "ddl":
-                    {
-                        if (pawnD.XCoordinate < BoardMaxRow && pawnD.YCoordinate > 0 &&
-                            IsAvailableNextPosition(pawnD.XCoordinate + 1, pawnD.YCoordinate - 1, king, pawnA, pawnB, pawnC))
-                        {
-                            pawnD.XCoordinate++;
-                            pawnD.YCoordinate--;
-                            isValid = true;
-                        }
-                        else
-                        {
-                            Console.Write("Invalid move!");
-                            Console.Read();
-                            isValid = false;
-                        }
-
-                        break;
-                    }
-
+                    return HandleDownLeftPawnMove(pawnD, king.Coordinates, pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates);
                 case "ddr":
-                    {
-                        if (pawnD.XCoordinate < BoardMaxRow && pawnD.YCoordinate < BoardMaxColumn &&
-                            IsAvailableNextPosition(pawnD.XCoordinate + 1, pawnD.YCoordinate + 1, king, pawnA, pawnB, pawnC))
-                        {
-                            pawnD.XCoordinate++;
-                            pawnD.YCoordinate++;
-                            isValid = true;
-                        }
-                        else
-                        {
-                            Console.Write("Invalid move!");
-                            Console.Read();
-                            isValid = false;
-                        }
-
-                        break;
-                    }
-
+                    return HandleDownRightPawnMove(pawnD, king.Coordinates, pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates);
                 default:
                     {
                         Console.Write("Invalid move!");
-                        Console.Read();
-                        isValid = false;
+                        Console.ReadKey();
+                        return false;
                     }
-
-                    return isValid;
             }
+        }
 
-            return isValid;
+        private bool HandleUpLeftKingMove(King king, params MatrixCoordinates[] otherPawnsCoordinates)
+        {
+            MatrixCoordinates newCoordinates = king.Coordinates + UpLeftDirection;
+
+            if (king.Coordinates.Row > 0 && king.Coordinates.Column > 0 &&
+                IsAvailableNextPosition(newCoordinates, otherPawnsCoordinates))
+            {
+                king.Coordinates = newCoordinates;
+                return true;
+            }
+            else
+            {
+                Console.Write("Invalid move!");
+                Console.ReadKey();
+                return false;
+            }
+        }
+
+        private bool HandleUpRightKingMove(King king, params MatrixCoordinates[] otherPawnsCoordinates)
+        {
+            MatrixCoordinates newCoordinates = king.Coordinates + UpRightDirection;
+
+            if (king.Coordinates.Row > 0 && king.Coordinates.Column < BoardMaxColumn &&
+                IsAvailableNextPosition(newCoordinates, otherPawnsCoordinates))
+            {
+                king.Coordinates = newCoordinates;
+                return true;
+            }
+            else
+            {
+                Console.Write("Invalid move!");
+                Console.ReadKey();
+                return false;
+            }
         }
 
         private bool IsValidKingMove(string command, King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
-            bool isValid = false;
             switch (command)
             {
                 case "kul":
-                    {
-                        if (king.XCoordinate > 0 && king.YCoordinate > 0 && 
-                            IsAvailableNextPosition(king.XCoordinate - 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
-                        {
-                            king.XCoordinate--;
-                            king.YCoordinate--;
-                            isValid = true;
-                        }
-                        else
-                        {
-                            Console.Write("Invalid move!");
-                            Console.Read();
-                            isValid = false;
-                        }
-
-                        break;
-                    }
-
+                    return HandleUpLeftKingMove(king, pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
                 case "kur":
-                    {
-                        if (king.XCoordinate > 0 && king.YCoordinate < BoardMaxColumn &&
-                            IsAvailableNextPosition(king.XCoordinate - 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
-                        {
-                            king.XCoordinate--;
-                            king.YCoordinate++;
-                            isValid = true;
-                        }
-                        else
-                        {
-                            Console.Write("Invalid move!");
-                            Console.Read();
-                            isValid = false;
-                        }
-
-                        break;
-                    }
-
+                    return HandleUpRightKingMove(king, pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
                 case "kdl":
-                    {
-                        if (king.XCoordinate < BoardMaxRow && king.YCoordinate > 0 && 
-                            IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate - 1, pawnA, pawnB, pawnC, pawnD))
-                        {
-                            king.XCoordinate++;
-                            king.YCoordinate--;
-                            isValid = true;
-                        }
-                        else
-                        {
-                            Console.Write("Invalid move!");
-                            Console.Read();
-                            isValid = false;
-                        }
-
-                        break;
-                    }
-
+                    return HandleDownLeftPawnMove(king, pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
                 case "kdr":
-                    {
-                        if (king.XCoordinate < BoardMaxRow && king.YCoordinate < BoardMaxColumn && 
-                            IsAvailableNextPosition(king.XCoordinate + 1, king.YCoordinate + 1, pawnA, pawnB, pawnC, pawnD))
-                        {
-                            king.XCoordinate++;
-                            king.YCoordinate++;
-                            isValid = true;
-                        }
-                        else
-                        {
-                            Console.Write("Invalid move!");
-                            Console.Read();
-                            isValid = false;
-                        }
-
-                        break;
-                    }
-
+                    return HandleDownRightPawnMove(king, pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
                 default:
                     {
                         Console.Write("Invalid move!");
-                        Console.Read();
-                        isValid = false;
+                        Console.ReadKey();
+                        return false;
                     }
-
-                    return isValid;
             }
-
-            return isValid;
         }
 
-        private bool IsAvailableNextPosition(MatrixCoordinates newCoordinates, MatrixCoordinates[] pawnsCoordinates)
+        private bool IsAvailableNextPosition(MatrixCoordinates newCoordinates, params MatrixCoordinates[] pawnsCoordinates)
         {
             foreach (MatrixCoordinates coordinates in pawnsCoordinates)
             {
@@ -507,7 +380,7 @@
             else
             {
                 Console.Clear();
-                this.board.GetImage(pawnA, pawnB, pawnC, pawnD, king);
+                this.board.GetImage(king, pawnA, pawnB, pawnC, pawnD);
                 Console.WriteLine("King loses in {0} turns...", turn / 2);
             }
         }
