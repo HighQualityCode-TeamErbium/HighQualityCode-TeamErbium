@@ -91,12 +91,11 @@
 
         private bool CanKingMove(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
-            // determine king restrictions
             bool canKingGoUpLeft = IsKingUpLeftMovementAvailable(king, pawnA, pawnB, pawnC, pawnD);
             bool canKingGoDownLeft = IsKingDownLeftMovementAvailable(king, pawnA, pawnB, pawnC, pawnD);
             bool canKingGoUpRight = IsKingUpRightMovementAvailable(king, pawnA, pawnB, pawnC, pawnD);
             bool canKingGoDownRight = IsKingDownRightMovementAvailable(king, pawnA, pawnB, pawnC, pawnD);
-            // check if all 
+            
             bool isAnyOfKingMovesAvaiable = canKingGoDownRight || canKingGoDownLeft || canKingGoUpLeft || canKingGoUpRight;
 
             return isAnyOfKingMovesAvaiable;
@@ -104,12 +103,11 @@
 
         private bool IsKingUpLeftMovementAvailable(King king, Pawn pawnA, Pawn pawnB, Pawn pawnC, Pawn pawnD)
         {
-            // check if king is near border
             if (king.Coordinates.Row == 0 || king.Coordinates.Column == 0)
             {
                 return false;
             }
-            // check if pawn is near king
+            
             MatrixCoordinates newKingCoordinates = king.Coordinates + UpLeftDirection;
             bool canKingGoUpLeft = 
                 IsAvailableNextPosition(newKingCoordinates, pawnA.Coordinates, pawnB.Coordinates, pawnC.Coordinates, pawnD.Coordinates);
@@ -247,7 +245,7 @@
             else
             {
                 Console.Write("Invalid move!");
-                Console.ReadKey();
+                Console.ReadLine();
                 return false;
             }
         }
@@ -265,7 +263,7 @@
             else
             {
                 Console.Write("Invalid move!");
-                Console.ReadKey();
+                Console.ReadLine();
                 return false;
             }
         }
@@ -293,7 +291,7 @@
                 default:
                     {
                         Console.Write("Invalid move!");
-                        Console.ReadKey();
+                        Console.ReadLine();
                         return false;
                     }
             }
@@ -312,7 +310,7 @@
             else
             {
                 Console.Write("Invalid move!");
-                Console.ReadKey();
+                Console.ReadLine();
                 return false;
             }
         }
@@ -330,7 +328,7 @@
             else
             {
                 Console.Write("Invalid move!");
-                Console.ReadKey();
+                Console.ReadLine();
                 return false;
             }
         }
@@ -350,7 +348,7 @@
                 default:
                     {
                         Console.Write("Invalid move!");
-                        Console.ReadKey();
+                        Console.ReadKey(true);
                         return false;
                     }
             }
