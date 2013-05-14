@@ -63,7 +63,7 @@
             
             if (isGameEnded)
             {
-                if (isKingOnTurn && king.Coordinates.Row == BoardMaxRow)
+                if (isKingOnTurn && king.Coordinates.Row == 0)
                 {
                     return true;
                 }
@@ -380,7 +380,7 @@
             else
             {
                 Console.Clear();
-                this.board.GetImage(king, pawnA, pawnB, pawnC, pawnD);
+                Console.WriteLine(this.board.GetImage(king, pawnA, pawnB, pawnC, pawnD));
                 Console.WriteLine("King loses in {0} turns...", turn / 2);
             }
         }
