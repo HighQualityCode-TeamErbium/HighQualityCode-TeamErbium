@@ -348,7 +348,7 @@
                 default:
                     {
                         Console.Write("Invalid move!");
-                        Console.ReadKey(true);
+                        Console.ReadLine();
                         return false;
                     }
             }
