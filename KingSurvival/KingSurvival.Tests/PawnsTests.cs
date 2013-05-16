@@ -38,7 +38,7 @@
                     string[] kingInitialRowInBoardSplitted = 
                         kingInitialRowInBoard.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    Assert.AreEqual<string>("K", kingInitialRowInBoardSplitted[4]);
+                    Assert.AreEqual<string>("K", kingInitialRowInBoardSplitted[3]);
                 }
             }
         }

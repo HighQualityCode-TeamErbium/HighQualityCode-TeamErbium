@@ -134,7 +134,7 @@
         }
 
         [TestMethod]
-        public void TestAllInvalidPossitions()
+        public void TestAllInvalidPositions()
         {
             string inputCommands = string.Format(
                 "kdl{0}{1}kdr{0}{1}kur{0}adl{0}{1}adr{0}kur{0}bdl{0}{1}bdr{0}" +
