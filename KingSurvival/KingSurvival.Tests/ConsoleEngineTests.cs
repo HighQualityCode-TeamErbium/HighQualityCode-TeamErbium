@@ -44,9 +44,10 @@
         public void TestKingWinsWithInvalidMoves()
         {
             string inputCommands = string.Format(
-                ("kur{0}bdr{0}kur{0}bdr{0}kul{0}bdr{0}kur{0}{1}kul{0}bdr{0}" +
-                "kdr{0}bdr{0}kul{0}bdr{0}{1}bdl{0}kur{0}bdr{0}kul{0}cdr{0}kur"),
-                Environment.NewLine, Enter);
+                "kur{0}bdr{0}kur{0}bdr{0}kul{0}bdr{0}kur{0}{1}kul{0}bdr{0}" +
+                "kdr{0}bdr{0}kul{0}bdr{0}{1}bdl{0}kur{0}bdr{0}kul{0}cdr{0}kur",
+                Environment.NewLine, 
+                Enter);
 
             using (StringWriter stringWriter = new StringWriter())
             {
@@ -105,8 +106,9 @@
         public void TestKingIsTrappedInRightWall()
         {
             string inputCommands = string.Format(
-                ("kur{0}ddl{0}kur{0}ddr{0}kul{0}cdl{0}kdr{0}cdr{0}kur{0}cdr{0}kur{0}cdr{0}kur{0}cdr"),
-                Environment.NewLine, Enter);
+                "kur{0}ddl{0}kur{0}ddr{0}kul{0}cdl{0}kdr{0}cdr{0}kur{0}cdr{0}kur{0}cdr{0}kur{0}cdr",
+                Environment.NewLine, 
+                Enter);
 
             using (StringWriter stringWriter = new StringWriter())
             {
@@ -135,11 +137,12 @@
         public void TestAllInvalidPossitions()
         {
             string inputCommands = string.Format(
-                ("kdl{0}{1}kdr{0}{1}kur{0}adl{0}{1}adr{0}kur{0}bdl{0}{1}bdr{0}" +
+                "kdl{0}{1}kdr{0}{1}kur{0}adl{0}{1}adr{0}kur{0}bdl{0}{1}bdr{0}" +
                 "kul{0}cdl{0}{1}cdr{0}kul{0}ddl{0}{1}ddr{0}kul{0}adr{0}{1}bdl{0}{1}" +
                 "ddr{0}{1}cdr{0}kur{0}{1}kul{0}{1}kdr{0}cdr{0}kur{0}cdr{0}{1}cdl{0}" +
-                "kur{0}ddl{0}kdr{0}{1}kur"),
-                Environment.NewLine, Enter);
+                "kur{0}ddl{0}kdr{0}{1}kur",
+                Environment.NewLine, 
+                Enter);
 
             using (StringWriter stringWriter = new StringWriter())
             {
@@ -168,13 +171,13 @@
         public void TestAllPawnsOnTheLastLine()
         {
             string inputCommands = string.Format(
-                (
                 "kur{0}adr{0}kur{0}adr{0}kur{0}adr{0}kur{0}adr{0}kul{0}adr{0}kdr{0}" +
                 "adr{0}kul{0}adr{0}kdr{0}ddl{0}kul{0}ddl{0}kdr{0}ddl{0}kul{0}ddl{0}kdr{0}" +
                 "ddl{0}kul{0}ddl{0}kdr{0}ddr{0}kul{0}cdl{0}kul{0}cdl{0}kdr{0}cdl{0}kdl{0}" +
                 "cdl{0}kur{0}cdr{0}kur{0}cdr{0}kdl{0}cdr{0}kdl{0}bdl{0}kul{0}bdl{0}kdr{0}" +
-                "bdr{0}kur{0}bdr{0}kdl{0}bdr{0}kul{0}bdr{0}kdl{0}bdr"),
-                Environment.NewLine, Enter);
+                "bdr{0}kur{0}bdr{0}kdl{0}bdr{0}kul{0}bdr{0}kdl{0}bdr",
+                Environment.NewLine, 
+                Enter);
 
             using (StringWriter stringWriter = new StringWriter())
             {
@@ -204,7 +207,8 @@
         {
             string inputCommands = string.Format(
                 "kul{0}bdr{0}kul{0}bdl{0}asd{0}{1}kur{0}asd{0}{1}adr{0}kur{0}bdl{0}kur{0}bdl{0}kul{0}ddl{0}kul",
-                Environment.NewLine, Enter);
+                Environment.NewLine, 
+                Enter);
 
             using (StringWriter stringWriter = new StringWriter())
             {

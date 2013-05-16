@@ -1,8 +1,8 @@
 ﻿namespace KingSurvival.Tests
 {
     using System;
-    using System.Text;
     using System.IO;
+    using System.Text;
     using KingSurvival.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -49,6 +49,7 @@
                     {
                         board.Append(outputLines[i]);
                     }
+
                     string actual = board.ToString();
                     Assert.AreEqual<string>(expected, actual, "Board is not create correctly!");
                 }
