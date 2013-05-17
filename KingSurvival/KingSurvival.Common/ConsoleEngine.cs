@@ -55,7 +55,6 @@
             do
             {
                 bool isValidMove = false;
-
                 do
                 {
                     try
