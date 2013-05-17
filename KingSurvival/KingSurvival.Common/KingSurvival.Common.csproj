@@ -43,6 +43,7 @@
     <Compile Include="ConsoleEngine.cs" />
     <Compile Include="IEngine.cs" />
     <Compile Include="King.cs" />
+    <Compile Include="KingSurvivalException.cs" />
     <Compile Include="Pawn.cs" />
     <Compile Include="MatrixCoordinates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

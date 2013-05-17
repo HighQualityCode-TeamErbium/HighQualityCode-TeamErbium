@@ -54,14 +54,21 @@
             int currentMove = 1;
             do
             {
-                bool isValidMove;
-                do
+                try
                 {
                     Console.Clear();
                     Console.WriteLine(this.board.GetImage(king, pawnA, pawnB, pawnC, pawnD));
-                    isValidMove = this.IsValidMove(currentMove, king, pawnA, pawnB, pawnC, pawnD);
+                    this.IsValidMove(currentMove, king, pawnA, pawnB, pawnC, pawnD);
                 }
-                while (!isValidMove);
+                catch (KingSurvivalException kse)
+                {
+                    Console.WriteLine(kse.Message);
+                    Console.ReadLine();
+
+                    Console.Clear();
+                    Console.WriteLine(this.board.GetImage(king, pawnA, pawnB, pawnC, pawnD));
+                    this.IsValidMove(currentMove, king, pawnA, pawnB, pawnC, pawnD);
+                }
 
                 endOfGame = this.HasGameEnded(currentMove, king, pawnA, pawnB, pawnC, pawnD);
                 this.isKingWinner = this.HasKingWon(currentMove, endOfGame, king, pawnA, pawnB, pawnC, pawnD);
@@ -327,9 +334,7 @@
             }
             else
             {
-                Console.Write("Invalid move!");
-                Console.ReadLine();
-                return false;
+                throw new KingSurvivalException("Invalid move!");
             }
         }
 
@@ -345,9 +350,7 @@
             }
             else
             {
-                Console.Write("Invalid move!");
-                Console.ReadLine();
-                return false;
+                throw new KingSurvivalException("Invalid move!");
             }
         }
 
@@ -357,17 +360,17 @@
             {
                 case "adl":
                     return this.HandleDownLeftPawnMove(
-                        pawnA, 
+                        pawnA,
                         king.Coordinates,
-                        pawnB.Coordinates, 
-                        pawnC.Coordinates, 
+                        pawnB.Coordinates,
+                        pawnC.Coordinates,
                         pawnD.Coordinates);
                 case "adr":
                     return this.HandleDownRightPawnMove(
                         pawnA,
-                        king.Coordinates, 
-                        pawnB.Coordinates, 
-                        pawnC.Coordinates, 
+                        king.Coordinates,
+                        pawnB.Coordinates,
+                        pawnC.Coordinates,
                         pawnD.Coordinates);
                 case "bdl":
                     return this.HandleDownLeftPawnMove(
@@ -393,7 +396,7 @@
                 case "cdr":
                     return this.HandleDownRightPawnMove(
                         pawnC,
-                        king.Coordinates, 
+                        king.Coordinates,
                         pawnA.Coordinates,
                         pawnB.Coordinates,
                         pawnD.Coordinates);
@@ -401,22 +404,18 @@
                     return this.HandleDownLeftPawnMove(
                         pawnD,
                         king.Coordinates,
-                        pawnA.Coordinates, 
-                        pawnB.Coordinates, 
+                        pawnA.Coordinates,
+                        pawnB.Coordinates,
                         pawnC.Coordinates);
                 case "ddr":
                     return this.HandleDownRightPawnMove(
                         pawnD,
-                        king.Coordinates, 
-                        pawnA.Coordinates, 
-                        pawnB.Coordinates, 
+                        king.Coordinates,
+                        pawnA.Coordinates,
+                        pawnB.Coordinates,
                         pawnC.Coordinates);
                 default:
-                    {
-                        Console.Write("Invalid move!");
-                        Console.ReadLine();
-                        return false;
-                    }
+                    throw new KingSurvivalException("Invalid move!");
             }
         }
 
@@ -432,9 +431,7 @@
             }
             else
             {
-                Console.Write("Invalid move!");
-                Console.ReadLine();
-                return false;
+                throw new KingSurvivalException("Invalid move!");
             }
         }
 
@@ -450,9 +447,7 @@
             }
             else
             {
-                Console.Write("Invalid move!");
-                Console.ReadLine();
-                return false;
+                throw new KingSurvivalException("Invalid move!");
             }
         }
 
@@ -490,9 +485,7 @@
                         pawnD.Coordinates);
                 default:
                     {
-                        Console.Write("Invalid move!");
-                        Console.ReadLine();
-                        return false;
+                        throw new KingSurvivalException("Invalid move!");
                     }
             }
         }
